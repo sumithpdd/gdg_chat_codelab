@@ -1,0 +1,75 @@
+{
+  #########################################################################
+  #
+  #   For a complete list of available configuration options see:
+  #   https://netlifycms.org/docs/configuration-options/
+  #
+  #   Enter your git repository and site information below:
+  #
+  #########################################################################
+
+  backend: {
+      name: git-gateway,
+      branch: main,
+      repo: 'sumithpdd/gdg_chat_codelab', # Path to your GitHub repository
+    },
+  local_backend: true,
+  #########################################################################
+  #
+  #   GatsbyJS prefers relative images to posts but Netlify's media library
+  #   prefers a single folder hosting all the images thus the media library
+  #   currently is not working as intended and it's only showing the images
+  #   used in the site's components.
+  #
+  #   For more information refer to:
+  #   https://netlifycms.org/docs/beta-features/#folder-collections-media-and-public-folder
+  #
+  ########################################################################
+
+  media_folder: '/content/assets',
+  public_folder: '/assets',
+
+  collections: [
+      ####################################################################
+      #   Chapters Collection
+      ####################################################################
+      {
+        name: 'chapters',
+        label: 'Chapters',
+        label_singular: 'chapter',
+        folder: 'content',
+        extension: 'mdx',
+        identifier_field: 'name',
+        media_folder: '',
+        public_folder: '',
+        format: 'frontmatter',
+        nested: { depth: 10 },
+        allow_nesting: true,
+        create: true,
+        sortable_fields: ['title', 'date'],
+        editor: { preview: true },
+        fields:
+          [
+            {
+              label: "Content Key",
+              name: "contentKey",
+              widget: "hidden",
+              default: "chapter",
+            },
+            { name: 'title', label: 'Title' },
+            { name: 'stepNo', label: 'Step No', widget: 'number' ,value_type: 'int' },
+            { label: "Meta Title", name: "metaTitle", widget: "string",default: "This is the title tag of this page" },
+            { label: "Meta Description", name: "metaDescription", widget: "string" ,default: "This is the meta description",},
+            { name: 'slug', label: 'Slug', hint: 'Custom slug', required: false },
+            { name: 'date', label: 'Date', widget: 'datetime' },
+            { name: 'duration', label: 'Duration' },
+            { name: 'description', label: 'Description', required: false },
+            { name: 'color', label: 'Color', widget: 'color', allowInput: true, required: false },
+            { name: 'body', label: 'Body', widget: 'markdown' },
+            { name: 'tags', label: 'Tags', widget: 'list', required: false },
+            { name: 'keywords', label: 'Keywords', widget: 'list', required: false },
+          ],
+      },
+
+    ],
+}

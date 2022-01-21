@@ -1,0 +1,36 @@
+---
+contentKey: chapter
+title: Project Structure
+stepNo: 2
+metaTitle: This is the title tag of this page
+metaDescription: This is the meta description
+date: 2021-01-13T22:57:17.496Z
+duration: 10 min
+tags:
+  - flutter
+keywords:
+  - flutter
+  - studying
+---
+# Project Structure
+
+Once you download the starter code for the project you will see some files
+we have here
+
+- [ ]  📄**main.dart** - that's is the start of the app
+- [ ]  📄**data.dart** - which holds all their data in there
+we have four different models in the app.
+    - [ ]  📄 **food.dart** which has an image URL a name and a price and the image URL links to one of the images in the assets folder.
+    - [ ]  📄**order.dart** consist of a restaurant , food and quantity
+    - [ ]  📄 **restaurant.dart**  which contains an image URL name address reading and list of food
+    items which represents the menu
+    - [ ]  📄 **user.dart** class which consists of a name a list of orders and a list of orders that are in the cart
+
+back in **data.dar**t  are we can see how we instantiate data.
+
+First we create all the different types of food each with our own image name and price.
+Next we create all the restaurants each with their own image URL name address reading and their own menu from the food items we instantiated above and now below this.
+
+The last thing to note is how we imported the images into our app. If we go into a **pubspec.yaml** file we can see that if we scroll down to assets all I did was uncomment.
+
+This images line and then replace it with assets / images and that's how we import all of our images from our assets images directory.
