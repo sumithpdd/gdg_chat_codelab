@@ -28,7 +28,22 @@
 
   media_folder: '/content/assets',
   public_folder: '/assets',
-
+  media_library: {
+      name: 'cloudinary',
+      config: {
+        cloud_name: 'sitecore',
+        api_key: '664686945695341',
+        default_transformations: [
+          [
+            {
+              width: 2000,
+              quality: 80,
+              crop: 'limit',
+            },
+          ],
+        ],
+      },
+    },
   collections: [
       ####################################################################
       #   Chapters Collection
