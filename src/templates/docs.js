@@ -29,7 +29,7 @@ export default class MDXRuntimeTest extends Component {
     const navItems = allMdx.edges
       .map(({ node }) => node.fields.slug)
       .filter(slug => slug !== '/')
-      .sort()
+      // .sort()
       .reduce(
         (acc, cur) => {
           if (forcedNavOrder.find(url => url === cur)) {
@@ -136,7 +136,7 @@ export const pageQuery = graphql`
         metaDescription
       }
     }
-    allMdx {
+    allMdx(sort: {fields: frontmatter___stepNo}) {
       edges {
         node {
           fields {
