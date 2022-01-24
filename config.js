@@ -9,7 +9,7 @@ const config = {
     logo: 'https://developers.google.com/community/gdg/images/logo-lockup-gdg-horizontal-full.png',
     logoLink: 'https://gdg-chat-codelab.netlify.app/',
     title:
-      "Flutter Code Lab",
+      "GDG",
     githubUrl: 'https://github.com/sumithpdd/gdg_chat_codelab',
     helpUrl: '',
     tweetText: '',
@@ -32,13 +32,13 @@ const config = {
   },
   sidebar: {
     forcedNavOrder: [
-      '/introduction', // add trailing slash if enabled above    
+     // '/introduction', // add trailing slash if enabled above    
     ],
     links: [{ text: 'Sumith Damodaran', link: 'https://Sumithpd.com' }],
     frontline: false,
     ignoreIndex: true,
     title:
-      "<a href='https://developers.google.com/community/gdg'>GDG</a><div class='greenCircle'></div>",
+      "<a href='https://developers.google.com/community/gdg'>FLUTTER CODE LAB</a><div class='greenCircle'></div>",
   },
   siteMetadata: {
     title: 'GDG Chat app codelab | Sumith Damodaran',

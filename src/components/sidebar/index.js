@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { ExternalLink } from 'react-feather';
 import config from '../../../config';
 
+
 // eslint-disable-next-line no-unused-vars
 const ListItem = styled(({ className, active, level, ...props }) => {
   return (
@@ -129,6 +130,7 @@ const SidebarLayout = ({ location }) => (
               }
             })}
           </ul>
+          
         </Sidebar>
       );
     }}
