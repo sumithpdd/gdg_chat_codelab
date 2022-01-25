@@ -1,0 +1,752 @@
+---
+contentKey: chapter
+title: Firebase Storage - Profile
+stepNo: 5
+metaTitle: Firebase Storage page
+metaDescription: Firebase Storage description
+date: 2022-01-25T21:20:25.138Z
+duration: 30 min
+tags:
+  - flutter
+  - firebase
+keywords:
+  - flutter
+  - firebase
+---
+# 🏠 Firebase Storage - Profile
+
+Here we will look at firebase storage, we have images for the attendees profileImages we can store in firebase storage. For that we will create a Edit profile screen
+
+### Edit Profile
+
+Refactor for code reuse - Move the `appdrawer `in its own widget, under widgets folder ,create a new file app_drawer_widget.dart
+
+
+
+![](https://lh3.googleusercontent.com/phZ6jB72uG8BckNQI-eBc3UZoEUqaSN1ZKmepyXbfqI0WP7AdJBr-ZPDDASBAuBI9m5otb7LTZoqEqOQnrNNa4YlM5-ZSOs2m1EvIPqQmORJzCW9BggvhjHjl5Hy-AozunZdjZ_l)
+
+```
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:flutter/material.dart';
+
+import 'package:gdg_flutter_firebase_chat/helpers/app_constants.dart';
+
+import 'package:gdg_flutter_firebase_chat/models/user.dart';
+
+import 'package:gdg_flutter_firebase_chat/models/user_data.dart';
+
+import 'package:gdg_flutter_firebase_chat/screens/edit_profile_screen.dart';
+
+import 'package:gdg_flutter_firebase_chat/services/database_service.dart';
+
+import 'package:provider/provider.dart';
+
+ 
+
+class AppDrawer extends StatefulWidget {
+
+ @override
+
+ _AppDrawerState createState() => _AppDrawerState();
+
+}
+
+ 
+
+class _AppDrawerState extends State<AppDrawer> {
+
+ _buildActivity(BuildContext context, String userId) {
+
+   return FutureBuilder(
+
+       future: Provider.of<DataBaseService>(context, listen: false)
+
+           .getUser(userId),
+
+       builder: (BuildContext context, AsyncSnapshot snapshot) {
+
+         if (!snapshot.hasData) {
+
+           return SizedBox.shrink();
+
+         }
+
+         User user = snapshot.data;
+
+         return DrawerHeader(
+
+           child: Column(
+
+             mainAxisAlignment: MainAxisAlignment.start,
+
+            
+
+             children: <Widget>[
+
+               CircleAvatar(
+
+                 radius: 20.0,
+
+                 backgroundImage: user.profileImageUrl.isEmpty
+
+                     ? AssetImage('assets/images/user_placeholder.jpg')
+
+                     : CachedNetworkImageProvider(user.profileImageUrl),
+
+                 backgroundColor: Colors.transparent,
+
+               ),
+
+               Text(
+
+                 user.name,
+
+                 style: TextStyle(color: Colors.black),
+
+               ),
+
+               Text(
+
+                 user.bio,
+
+                 style: TextStyle(color: Colors.black),
+
+               ),
+
+               IconButton(
+
+                 icon: Icon(Icons.edit),
+
+                 tooltip: 'Edit Profile',
+
+                 onPressed: () => Navigator.push(
+
+                   context,
+
+                   MaterialPageRoute(
+
+                     builder: (_) => EditProfileScreen(
+
+                       user: user,
+
+                     ),
+
+                   ),
+
+                 ),
+
+                 color:
+
+                     AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR),
+
+               ),
+
+             ],
+
+           ),
+
+         );
+
+       });
+
+ }
+
+ 
+
+ @override
+
+ Widget build(BuildContext context) {
+
+   String currentUserId = Provider.of<UserData>(context).currentUserId;
+
+   return Drawer(
+
+     child: Column(
+
+       children: <Widget>[
+
+         currentUserId.isNotEmpty
+
+             ? _buildActivity(context, currentUserId)
+
+             : SizedBox.shrink(),
+
+         Spacer(),
+
+         ListTile(
+
+           leading: Icon(Icons.home),
+
+           title: Text('Home'),
+
+           onTap: () {},
+
+         ),
+
+         Divider(),
+
+         ListTile(
+
+           leading: Icon(Icons.people),
+
+           title: Text('Attendants'),
+
+           onTap: () {},
+
+         ),
+
+         Spacer(flex: 8),
+
+       ],
+
+     ),
+
+   );
+
+ }
+
+}
+```
+
+
+
+ Update attendees_screen.dart to use the AppDrawer
+
+> ` drawer: AppDrawer(),`
+
+
+
+And delete 
+
+```
+leading: IconButton(
+
+          icon: Icon(Icons.menu),
+
+          iconSize: 30.0,
+
+          color: Colors.white,
+
+          onPressed: () {},
+
+        ),
+```
+
+      
+
+### EditProfile Screen
+
+Create a new screen edit_profile_screen.dart under screens folder.
+
+```
+import 'dart:io';
+
+ 
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:flutter/material.dart';
+
+import 'package:gdg_flutter_firebase_chat/helpers/app_constants.dart';
+
+import 'package:gdg_flutter_firebase_chat/models/user.dart';
+
+import 'package:gdg_flutter_firebase_chat/services/storage_service.dart';
+
+import 'package:gdg_flutter_firebase_chat/services/database_service.dart';
+
+import 'package:image_picker/image_picker.dart';
+
+ 
+
+class EditProfileScreen extends StatefulWidget {
+
+   static final String id = 'edit_profile_screen';
+
+ 
+
+ final User user;
+
+ EditProfileScreen({this.user});
+
+ @override
+
+ _EditProfileScreenState createState() => _EditProfileScreenState();
+
+}
+
+ 
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+
+ final _formKey = GlobalKey<FormState>();
+
+ File _profileImage;
+
+ String _name = '';
+
+ String _bio = '';
+
+ bool _isLoading = false;
+
+ @override
+
+ void initState() {
+
+   super.initState();
+
+   _name = widget.user.name;
+
+   _bio = widget.user.bio;
+
+ }
+
+ 
+
+ _handleImageFromGallery() async {
+
+   File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+   if (imageFile != null) {
+
+     setState(() {
+
+       _profileImage = imageFile;
+
+     });
+
+   }
+
+ }
+
+ 
+
+ _displayProfileImage() {
+
+   // No new profile image
+
+   if (_profileImage == null) {
+
+     // No existing profile image
+
+     if (widget.user.profileImageUrl.isEmpty) {
+
+       // Display placeholder
+
+       return AssetImage('assets/images/user_placeholder.jpg');
+
+     } else {
+
+       // User profile image exists
+
+       return CachedNetworkImageProvider(widget.user.profileImageUrl);
+
+     }
+
+   } else {
+
+     // New profile image
+
+     return FileImage(_profileImage);
+
+   }
+
+ }
+
+ 
+
+ _submit() async {
+
+   if (_formKey.currentState.validate() && !_isLoading) {
+
+     _formKey.currentState.save();
+
+ 
+
+     setState(() {
+
+       _isLoading = true;
+
+     });
+
+ 
+
+     // Update user in database
+
+     String _profileImageUrl = '';
+
+ 
+
+     if (_profileImage == null) {
+
+       _profileImageUrl = widget.user.profileImageUrl;
+
+     } else {
+
+       _profileImageUrl = await StorageService.uploadUserProfileImage(
+
+         widget.user.profileImageUrl,
+
+         _profileImage,
+
+       );
+
+     }
+
+ 
+
+     User user = User(
+
+       id: widget.user.id,
+
+       name: _name,
+
+       profileImageUrl: _profileImageUrl,
+
+       bio: _bio,
+
+     );
+
+     // Database update
+
+     DataBaseService.updateUser(user);
+
+ 
+
+     Navigator.pop(context);
+
+   }
+
+ }
+
+ 
+
+ @override
+
+ Widget build(BuildContext context) {
+
+   return Scaffold(
+
+     backgroundColor: Colors.white,
+
+     appBar: AppBar(
+
+       backgroundColor: Colors.white,
+
+       title: Text(
+
+         'Edit Profile',
+
+         style: TextStyle(color: Colors.black),
+
+       ),
+
+     ),
+
+     body: GestureDetector(
+
+       onTap: () => FocusScope.of(context).unfocus(),
+
+       child: ListView(
+
+         children: <Widget>[
+
+           _isLoading
+
+               ? LinearProgressIndicator(
+
+                   backgroundColor: AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR),
+
+                   valueColor: AlwaysStoppedAnimation(AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR)),
+
+                 )
+
+               : SizedBox.shrink(),
+
+           Padding(
+
+             padding: const EdgeInsets.all(30.0),
+
+             child: Form(
+
+               key: _formKey,
+
+               child: Column(
+
+                 children: <Widget>[
+
+                   CircleAvatar(
+
+                     radius: 60.0,
+
+                     backgroundColor: Colors.grey,
+
+                     backgroundImage: _displayProfileImage(),
+
+                   ),
+
+                   FlatButton(
+
+                     onPressed: _handleImageFromGallery,
+
+                     child: Text(
+
+                       'Change Profile Image',
+
+                       style: TextStyle(
+
+                           color: Theme.of(context).accentColor,
+
+                           fontSize: 16.0),
+
+                     ),
+
+                   ),
+
+                   TextFormField(
+
+                     initialValue: _name,
+
+                     style: TextStyle(fontSize: 18.0),
+
+                     decoration: InputDecoration(
+
+                       icon: Icon(
+
+                         Icons.person,
+
+                         size: 30.0,
+
+                       ),
+
+                       labelText: 'Name',
+
+                     ),
+
+                     validator: (input) => input.trim().length < 1
+
+                         ? 'Please enter a valid name'
+
+                         : null,
+
+                     onSaved: (input) => _name = input,
+
+                   ),
+
+                   TextFormField(
+
+                     initialValue: _bio,
+
+                     style: TextStyle(fontSize: 18.0),
+
+                     decoration: InputDecoration(
+
+                       icon: Icon(
+
+                         Icons.book,
+
+                         size: 30.0,
+
+                       ),
+
+                       labelText: 'Bio',
+
+                     ),
+
+                     validator: (input) => input.trim().length > 150
+
+                         ? 'Please enter a bio less than 150 characters'
+
+                         : null,
+
+                     onSaved: (input) => _bio = input,
+
+                   ),
+
+                   Container(
+
+                     margin: EdgeInsets.all(40.0),
+
+                     height: 40.0,
+
+                     width: 250.0,
+
+                     child: FlatButton(
+
+                       onPressed: _submit,
+
+                       color: AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR),
+
+                       textColor: Colors.white,
+
+                       child: Text(
+
+                         'Save Profile',
+
+                         style: TextStyle(fontSize: 18.0),
+
+                       ),
+
+                     ),
+
+                   ),
+
+                 ],
+
+               ),
+
+             ),
+
+           ),
+
+         ],
+
+       ),
+
+     ),
+
+   );
+
+ }
+
+}
+```
+
+
+
+ 
+
+We will update databse_service.dart and add a new function updateUser
+
+```
+static void updateUser(User user) {
+
+   usersRef.document(user.id).updateData({
+
+     'name': user.name,
+
+     'profileImageUrl': user.profileImageUrl,
+
+     'bio': user.bio,
+
+   });
+
+ }
+```
+
+
+
+
+
+#### For storing profile image 
+
+we need a new service, storage_service.dart in service folder and create functions to upload user profile image.
+
+```
+import 'dart:io';
+
+ 
+
+import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
+import 'package:gdg_flutter_firebase_chat/helpers/constants.dart';
+
+import 'package:path_provider/path_provider.dart';
+
+import 'package:uuid/uuid.dart';
+
+ 
+
+class StorageService {
+
+ static Future<String> uploadUserProfileImage(
+
+     String url, File imageFile) async {
+
+   String photoId = Uuid().v4();
+
+   File image = await compressImage(photoId, imageFile);
+
+ 
+
+   if (url.isNotEmpty) {
+
+     // Updating user profile image
+
+     RegExp exp = RegExp(r'userProfile_(.*).jpg');
+
+     photoId = exp.firstMatch(url)\[1];
+
+   }
+
+ 
+
+   StorageUploadTask uploadTask = storageRef
+
+       .child('images/users/userProfile_$photoId.jpg')
+
+       .putFile(image);
+
+   StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+
+   String downloadUrl = await storageSnap.ref.getDownloadURL();
+
+   return downloadUrl;
+
+ }
+
+ 
+
+ static Future<File> compressImage(String photoId, File image) async {
+
+   final tempDir = await getTemporaryDirectory();
+
+   final path = tempDir.path;
+
+   File compressedImageFile = await FlutterImageCompress.compressAndGetFile(
+
+     image.absolute.path,
+
+     '$path/img_$photoId.jpg',
+
+     quality: 70,
+
+   );
+
+   return compressedImageFile;
+
+ }
+
+}
+```
+
+ 
+
+We used few new packages in the new code lets add them to pubspec.yaml and run pub get
+
+> `  flutter_image_compress: ^0.6.5+1  `
+>
+> `path_provider: ^1.6.5`
+>
+> `  uuid: ^2.0.4`
+>
+> `  image_picker: ^0.6.3+4`
+
+ 
+
+Image picker for IOS needs some special setting <https://pub.dev/packages/image_picker>
+
+NSPhotoLibraryUsageDescription
+
+NSCameraUsageDescription
+
+
+
+![](https://lh3.googleusercontent.com/9kDtm6HcavLnPd5RihgkRFRMndhgj7Oj5M57c8WhbMKjwojImWtPt0sSMwOT7jUk1yZTUTSberacCTiJhtoNF169reNlEJq9veGChNky0POXm_wTbH6jMYBMaezIQBhXAYtob0o2)
+
+
+
+![](https://lh3.googleusercontent.com/-PxSdCmL9dStOcYko_QkCGr-OVvEb5D7WbR2tNfyD-42wZ80zAu0UJQhQFpf1igm1nRt7zha8_ZefkHywVmVbqXjsL2NR7_vCZKo31nOqsCuN3NG7UAqVHc7VodnqwnaJLSp8GQ5)![](https://lh3.googleusercontent.com/lobodaHtbrbiXAQAo6dpp-9fWXFOPqZsYZ9Cc45zHdvv7TXq9CjlD9GtjCv1A-YxGkEdMBJnRZCZeW37c_ncEdEL5Rtwbk403cjqI0nrR7i7YHnXaVRGpLn4MA6adqas6FUmy9xs)
