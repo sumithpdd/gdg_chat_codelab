@@ -1,0 +1,590 @@
+---
+contentKey: chapter
+title: Update Chat Screen
+stepNo: 6
+metaTitle: Update Chat Screen page
+metaDescription: Update Chat Screen description
+date: 2022-01-25T21:27:17.316Z
+duration: 30 min
+tags:
+  - flutter
+  - firebase
+keywords:
+  - flutter
+  - firebase
+---
+# 🏠 Update Chat Screen
+
+
+
+Now let's finish the Chat application and saveapplication save the chat message to database.
+
+#### DataBase Service
+
+We update our DataBaseService to getChatMessages and sendChatMessage
+
+```
+Future<List<Message>> getChatMessages(
+
+     String senderId, String receiverId) async {
+
+      
+
+   List<Message> messages = \[];
+
+   QuerySnapshot messagesSenderQuerySnapshot = await chatsRef
+
+       .where('senderId', isEqualTo: senderId)
+
+       .where('toUserId', isEqualTo: receiverId)
+
+       .orderBy('timestamp', descending: true)
+
+       .getDocuments();
+
+ 
+
+   messagesSenderQuerySnapshot.documents.forEach((doc) {
+
+     print(doc.documentID);
+
+     messages.add(Message.fromDoc(doc));
+
+   });
+
+   QuerySnapshot messagestoQuerySnapshot = await chatsRef
+
+       .where('senderId', isEqualTo: receiverId)
+
+       .where('toUserId', isEqualTo: senderId)
+
+       .orderBy('timestamp', descending: true)
+
+       .getDocuments();
+
+ 
+
+   messagestoQuerySnapshot.documents.forEach((doc) {
+
+     print(doc.documentID);
+
+     messages.add(Message.fromDoc(doc));
+
+   });
+
+ 
+
+   Comparator<Message> timestampComparator =
+
+       (a, b) => b.timestamp.compareTo(a.timestamp);
+
+   messages.sort(timestampComparator);
+
+   return messages;
+
+ }
+
+ 
+
+ void sendChatMessage(Message message) {
+
+   chatsRef.add({
+
+     'senderId': message.senderId,
+
+     'toUserId': message.toUserId,
+
+     'text': message.text,
+
+     'imageUrl': message.imageUrl,
+
+     'isLiked': message.isLiked,
+
+     'unread': message.unread,
+
+     'timestamp': Timestamp.fromDate(DateTime.now()),
+
+   });
+
+ }
+```
+
+
+
+#### Update Message Model
+
+We need to  update our message model, and introduce from sender and to sender and new fields, also it will have a function that maps database values with object.
+
+```
+class Message {
+
+  final String id, senderId, toUserId, text, imageUrl;
+
+  final bool isLiked;
+
+  final bool unread;
+
+  final Timestamp timestamp;
+
+ 
+
+  Message({
+
+    this.id,
+
+    this.senderId,
+
+    this.toUserId,
+
+    this.text,
+
+    this.imageUrl,
+
+    this.isLiked,
+
+    this.unread,
+
+    this.timestamp,
+
+  });
+
+ 
+
+  factory Message.fromDoc(DocumentSnapshot doc) {
+
+    return Message(
+
+        id: doc.documentID,
+
+        senderId: doc\['senderId'],
+
+        toUserId: doc\['toUserId'],
+
+        text: doc\['text'],
+
+        imageUrl: doc\['imageUrl'],
+
+        isLiked: doc\['isLiked'],
+
+        unread: doc\['unread'],
+
+        timestamp: doc\['timestamp']);
+
+  }
+
+}
+```
+
+
+
+
+
+We will add dateFormat to our constants.dart file
+
+```
+final DateFormat timeFormat =DateFormat('E, h:mm a');
+```
+
+
+
+To get the dateformat import package - intl - pubspec.yaml
+
+> `  intl: ^0.16.1`
+
+
+
+#### Refactor Chat Screen
+
+That chat_screen.dart will need to take 2 parameters, from which user message is coming from and to sender.
+
+```
+final String currentUserId;
+
+ final String toUserId;
+
+ 
+
+ ChatScreen({this.currentUserId, this.toUserId});
+```
+
+ 
+
+We need to bring messages from our database.
+
+`Delete`
+
+```
+ final List<Message> _messages = messages;
+```
+
+
+
+ 
+
+`And add`
+
+```
+DataBaseService _dataBaseService;
+
+ List<Message> _messages = \[];
+
+ 
+
+ @override
+
+ void initState() {
+
+   super.initState();
+
+     _dataBaseService = Provider.of<DataBaseService>(context, listen: false);
+
+ 
+
+   _setupMessages();
+
+ }
+
+ 
+
+ _setupMessages() async {
+
+   List<Message> messages = await _dataBaseService.getChatMessages(
+
+       widget.currentUserId, widget.toUserId);
+
+   setState(() {
+
+     _messages = messages;
+
+   });
+
+ }
+```
+
+  
+
+Update message time with
+
+```
+  Text(
+
+                 '${timeFormat.format(message.timestamp.toDate())}',
+```
+
+     
+
+      
+
+
+
+In the  `void _handleSubmitted(String` , update code to pass new values and call the database service
+
+```
+void _handleSubmitted(String text) {
+
+   _textMessageController.clear();
+
+ 
+
+   setState(() {
+
+     _isComposing = false;
+
+   });
+
+   Message message = Message(
+
+     senderId: widget.currentUserId,
+
+     toUserId: widget.toUserId,
+
+     timestamp: Timestamp.fromDate(DateTime.now()),
+
+     text: text,
+
+     isLiked: true,
+
+     unread: true,
+
+   );
+
+   setState(() {
+
+     _messages.insert(0, message);
+
+   });
+
+       _dataBaseService.sendChatMessage(message);
+
+ 
+
+ }
+```
+
+And finally update the `isMe `code to get value from the widget
+
+                   
+
+```
+final bool isMe = message.senderId == widget.currentUserId;
+```
+
+Chat screen is called through the attendees screen.
+
+#### Update all_attendees_widget
+
+So update the all_attendees_widget.dart
+
+In the build get the current user id
+
+```
+Widget build(BuildContext context) {
+
+       String currentUserId =
+
+       Provider.of<UserData>(context, listen: false).currentUserId;
+```
+
+
+
+And pass it to the chatscreen
+
+```
+return GestureDetector(
+
+               onTap: () => Navigator.push(
+
+                 context,
+
+                 MaterialPageRoute(
+
+                   builder: (_) => ChatScreen(
+
+                     currentUserId: currentUserId,
+
+                     toUserId: user.id,
+
+                   ),
+
+                 ),
+
+               ),
+```
+
+
+
+
+
+![](https://lh4.googleusercontent.com/KrQ0Q44DBwIwR9TI3vDFWrZ8dJwtNT3NVuaPbYh_JdNEi4iNMukWLCpTP8VS5kHfPEY5fTgzIYyWorlWbpL_g4sUGqkl6LGKjdvlxJBnVD-ZWhJwaiFgBg-jiHNPd2aForffvaQ7)
+
+
+
+## Step 6 -Sending Picture Messages
+
+We would also like to send pictures in the chat.
+
+In our storage_service.dart we will add a new function uploadMessageImage
+
+```
+Future<String> uploadMessageImage(File imageFile) async {
+
+   String imageId = Uuid().v4();
+
+   File image = await compressImage(imageId, imageFile);
+
+ 
+
+   String downloadUrl = await _uploadImage(
+
+     'images/messages/message_$imageId.jpg',
+
+     imageId,
+
+     image,
+
+   );
+
+   return downloadUrl;
+
+ }
+```
+
+ 
+
+In chat_screen.dart we update _buildMessage
+
+And check if message.imageurl == null and remove  Text(              message.text, …
+
+```
+   children: <Widget>[
+
+           message.imageUrl == null
+
+               ? _buildText(isMe, message)
+
+               : _buildImage(context, message),
+
+           SizedBox(height: 8.0),
+```
+
+    
+
+Add the new methods before build
+
+```
+_buildText(bool isMe,Message message) {
+
+   return Text(
+
+             message.text,
+
+             style: TextStyle(
+
+               color: isMe ? Colors.white60 : Colors.blueGrey,
+
+               fontSize: 12.0,
+
+               fontWeight: FontWeight.w600,
+
+             ),
+
+           );
+
+ }
+
+_buildImage(BuildContext context,Message message) {
+
+   final size = MediaQuery.of(context).size;
+
+   return Container(
+
+     height: size.height * 0.2,
+
+     width: size.width * 0.6,
+
+     decoration: BoxDecoration(
+
+         borderRadius: BorderRadius.circular(20.0),
+
+         image: DecorationImage(
+
+           fit: BoxFit.cover,
+
+           image: CachedNetworkImageProvider(message.imageUrl),
+
+         )),
+
+   );
+
+ }
+```
+
+Add to onPressed of our camera icon
+
+```
+children: <Widget>[
+
+         RawMaterialButton(
+
+           onPressed: () async {
+
+             File imageFile = await ImagePicker.pickImage(
+
+               source: ImageSource.gallery,
+
+             );
+
+             if (imageFile != null) {
+
+               String imageUrl =
+
+                   await Provider.of<StorageService>(context, listen: false)
+
+                       .uploadMessageImage(imageFile);
+
+               _handleSubmitted(null, imageUrl);
+
+             }
+
+           },
+```
+
+Update _handleSubmitted to take additional parameter
+
+```
+void _handleSubmitted(String text, String imageUrl) {
+
+   if ((text != null && text.trim().isNotEmpty) || imageUrl != null) {
+
+     if (imageUrl == null) {
+
+       //text message
+
+ 
+
+       setState(() {
+
+         _isComposing = false;
+
+       });
+
+     }
+
+     Message message = Message(
+
+       senderId: widget.currentUserId,
+
+       toUserId: widget.toUserId,
+
+       imageUrl: imageUrl,
+
+       timestamp: Timestamp.fromDate(DateTime.now()),
+
+       text: text,
+
+       isLiked: true,
+
+       unread: true,
+
+     );
+
+     setState(() {
+
+       _messages.insert(0, message);
+
+     });
+
+     _dataBaseService.sendChatMessage(message);
+
+   }
+
+ }
+```
+
+ And update its usages.
+
+```
+onPressed: _isComposing
+
+               ? () => _handleSubmitted(
+
+                     _textMessageController.text,
+
+                     null,
+
+                   )
+
+               : null,
+```
+
+           
+
+Finally add Provider for StorageService in main.dart
+
+```
+Provider<StorageService>(
+
+     create: (_) => StorageService(),
+
+   ),
+```
