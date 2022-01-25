@@ -1,0 +1,95 @@
+---
+contentKey: chapter
+title: Appendix
+stepNo: 8
+metaTitle: Appendix page
+metaDescription: Appendix description
+date: 2022-01-25T21:41:12.428Z
+duration: 30 min
+tags:
+  - flutter
+  - firebase
+keywords:
+  - flutter
+  - firebase
+---
+# 🏠 Appendix
+
+ 
+
+> For your info
+>
+> `Exception has occurred.`
+>
+> `PlatformException (PlatformException(Error performing getDocuments, FAILED_PRECONDITION: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/gdgflutterfirebasechat/firestore/indexes?create_composite=ClRwcm9qZWN0cy9nZGdmbHV0dGVyZmlyZWJhc2VjaGF0L2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy9jaGF0cy9pbmRleGVzL18QARoMCghzZW5kZXJJZBABGgwKCHRvVXNlcklkEAEaDQoJdGltZXN0YW1wEAIaDAoIX19uYW1lX18QAg, null))`
+
+### Explain 
+
+Talk about Provider and StreamBuilder
+
+```
+runApp(MultiProvider(providers: [
+
+      Provider<AuthService>(
+
+        create: (_) => AuthService(),
+
+      )
+
+    ], child: MyApp()))
+```
+
+
+
+```
+home: StreamBuilder<FirebaseUser>(
+        stream: Provider.of<AuthService>(context,listen: false).user,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return HomeScreen();
+          } else {
+            return LoginScreen();
+          }
+        },
+      ),
+```
+
+
+
+### Index for query
+
+> https://console.firebase.google.com/v1/r/project/flutterfirebasechat-622ea/firestore/indexes?create_composite=Cldwcm9qZWN0cy9mbHV0dGVyZmlyZWJhc2VjaGF0LTYyMmVhL2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy9jaGF0cy9pbmRleGVzL18QARoNCgltZW1iZXJJZHMYARoTCg9yZWNlbnRUaW1lc3RhbXAQAhoMCghfX25hbWVfXxAC
+
+
+
+### Additional Screenshots
+
+Test mode and - eu-west
+
+![](https://lh3.googleusercontent.com/i8gqOhhF2qblZp04yuZ66KdY2htK9Ns_4pvQ4EbpySYhE29z6djWvYSKrhc2FXsY6ZGk6yprr__Uv7ZkbJ87IOJ1QASLgkDyEACm8Cnd1MQiUl2x9118hIiod_HVqphc4KaLucbD)
+
+
+
+![](https://lh5.googleusercontent.com/FOWDkwIVi3jS2nSHCWeUfjhDrQzBSDirxdnWeVmy4e4sd_vUq8jYfqETZR8k5kzyfwv5NBIaUJaR-K6cIqoC3PUr7J5FflSXylVPW3PyuYbEEiRwXWu-TzE7xTDZST_TMo9ZRtkl)
+
+
+
+You should have node installed.
+
+Open a terminal window and navigate to the directory for your code:
+
+Initiate your project:
+
+```
+$ firebase init
+```
+
+Deploy your functions:
+
+```
+$ firebase deploy
+```
+
+
+
+![](https://lh5.googleusercontent.com/ARwEtFC7IdjA9cCFZH6wJN7TpCoijVqoJPah3eRiL4rSwHjCBbSH7EaNliQtq758eizp6LoHVtZ4ARkOcS08H1LU9HG9UvNCSye5RFpnxxOGePasrO1rzVT1Oq2CD1_7NrZE-cJf)
