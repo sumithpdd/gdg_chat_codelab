@@ -23,67 +23,77 @@ export const saveUser = (userName, userEmail, fullName) => {
   userInfoMap.userName = userName;
   userInfoMap.userEmail = userEmail;
   userInfoMap.fullName = fullName;
-  localStorage.setItem('ueUser', JSON.stringify(userInfoMap));
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('ueUser', JSON.stringify(userInfoMap));
+  }
 };
 
 export const getUser = () => {
   // retrieve cache first...
   if (Object.keys(userInfoMap).length) return userInfoMap;
 
-  // FIXME: check localStorage existence in build mode @2019/04/24
-  if (typeof localStorage === 'undefined') return null;
+  if (typeof window !== 'undefined') {
+    if (typeof window.localStorage === 'undefined') return null;
 
-  // retrive local storage
-  let user = localStorage.getItem('ueUser');
-  if (user) {
-    let ujson = JSON.parse(user);
-    userInfoMap.userName = ujson.userName;
-    userInfoMap.userEmail = ujson.userEmail;
-    userInfoMap.fullName = ujson.fullName;
-    return userInfoMap;
+    // retrive local storage
+    let user = window.localStorage.getItem('ueUser');
+    if (user) {
+      let ujson = JSON.parse(user);
+      userInfoMap.userName = ujson.userName;
+      userInfoMap.userEmail = ujson.userEmail;
+      userInfoMap.fullName = ujson.fullName;
+      return userInfoMap;
+    }
   }
-
   return null;
 };
 
 //  ------------ learning track recording ---------------
 const initLearningTrack = () => {
   if (userLearnTracks.length) return; // only init once
-  let saved = JSON.parse(localStorage.getItem('userLearnTracks'));
-  if (saved) saved.map((o) => userLearnTracks.push(o));
+  if (typeof window !== 'undefined') {
+    let saved = JSON.parse(window.localStorage.getItem('userLearnTracks'));
+    if (saved) saved.map((o) => userLearnTracks.push(o));
+  }
 };
 // status: start, unlock, quiz, complete
 // need to remove repetition?
 export const saveLearningTrack = (slug, title, category, date, status) => {
   initLearningTrack(); // init first
-  userLearnTracks.splice(0, 0, { slug,  title, category, date, status }); // insert to first
-  localStorage.setItem('userLearnTracks', JSON.stringify(userLearnTracks));
+  userLearnTracks.splice(0, 0, { slug, title, category, date, status }); // insert to first
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('userLearnTracks', JSON.stringify(userLearnTracks));
+  }
 };
 
 export const getLearningTracks = () => {
-  // FIXME: check localStorage existence in build mode @2019/04/24
-  if (typeof localStorage === 'undefined') return null;
+  if (typeof window !== 'undefined') {
+    if (typeof window.localStorage === 'undefined') return null;
 
-  let saved = JSON.parse(localStorage.getItem('userLearnTracks'));
-  if (saved) return saved; // use DESC order better @2019/06/03
+    let saved = JSON.parse(window.localStorage.getItem('userLearnTracks'));
+    if (saved) return saved; // use DESC order better @2019/06/03
+  }
   // if(saved) return saved.reverse()
   return null;
 };
 
 export const getLearningTrackBy = (slug) => {
-  let saved = JSON.parse(localStorage.getItem('userLearnTracks'));
-  if (!saved) return null;
   let tracks = [];
-  saved.map((t) => {
-    if (t.slug === slug) tracks.push(t);
-  });
+  if (typeof window !== 'undefined') {
+    let saved = JSON.parse(window.localStorage.getItem('userLearnTracks'));
+    if (!saved) return null;
+
+    saved.map((t) => {
+      if (t.slug === slug) tracks.push(t);
+    });
+  }
   return tracks;
 };
 
-export const saveTrack = (slug,  title) => {
+export const saveTrack = (slug, title) => {
   const date = new Date().toISOString();
   const category = 'flutter';
-  const status = 'read';  
+  const status = 'read';
   const tracks = getLearningTrackBy(slug);
   let saved = false;
   if (tracks)
@@ -92,21 +102,24 @@ export const saveTrack = (slug,  title) => {
     });
   if (saved) return;
 
-  saveLearningTrack(slug,  title, category, date, status);
-  
+  saveLearningTrack(slug, title, category, date, status);
 };
 // ------------- quiz submition records -----------------
 const initUserQuiz = () => {
   if (userQuizMap.length) return; // only init once
-  let saved = JSON.parse(localStorage.getItem('userQuizMap'));
+  if (typeof window !== 'undefined') {
+  let saved = JSON.parse(window.localStorage.getItem('userQuizMap'));
   if (saved) saved.map((o) => userQuizMap.push(o));
+  }
 };
 
 export const saveUserQuiz = (title, slug, user, ans, level, duration, completion) => {
   initUserQuiz(); // init first
   let record = { title, slug, user, ans, level, duration, completion };
   userQuizMap.splice(0, 0, record);
-  localStorage.setItem('userQuizMap', JSON.stringify(userQuizMap));
+  if (typeof window !== 'undefined') {
+  window.localStorage.setItem('userQuizMap', JSON.stringify(userQuizMap));
+  }
 };
 
 export const getUserQuizs = (userName) => {
@@ -133,10 +146,12 @@ export const getQuiz = (userName, slug) => {
 
 export const deleteQuiz = (userName, slug) => {
   let index; // which to delete
-  // FIXME: delete memory first! @2019/03/11
-  userQuizMap.map((q, i) => {
-    if (q.user === userName && q.slug === slug) index = i;
-  });
-  userQuizMap.splice(index, 1);
-  localStorage.setItem('userQuizMap', JSON.stringify(userQuizMap));
+
+  if (typeof window !== 'undefined') {
+    userQuizMap.map((q, i) => {
+      if (q.user === userName && q.slug === slug) index = i;
+    });
+    userQuizMap.splice(index, 1);
+    window.localStorage.setItem('userQuizMap', JSON.stringify(userQuizMap));
+  }
 };
