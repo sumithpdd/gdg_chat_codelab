@@ -1,0 +1,70 @@
+---
+contentKey: chapter
+title: One more thing
+stepNo: 7
+metaTitle: One more thing page
+metaDescription: One more thing description
+date: 2022-01-25T21:39:16.488Z
+duration: 30 min
+tags:
+  - flutter
+  - firebase
+keywords:
+  - flutter
+  - firebase
+---
+# 🏠 One more thing
+
+
+
+On the chat window lets add whom we modify the app bar to include profile image and name
+
+```
+appBar: AppBar(
+
+       title: Row(
+
+         children: <Widget>[
+
+           CircleAvatar(
+
+               radius: 25.0,
+
+               backgroundImage: widget.toUser.profileImageUrl.isEmpty
+
+                   ? // Display placeholder
+
+                   AssetImage('assets/images/user_placeholder.jpg')
+
+                   : CachedNetworkImageProvider(
+
+                       widget.toUser.profileImageUrl)),
+
+           SizedBox(width: 10.0),
+
+           Text(
+
+             widget.toUser.name,
+
+             style: TextStyle(
+
+               fontSize: 18.0,
+
+               fontWeight: FontWeight.bold,
+
+             ),
+
+           ),
+
+         ],
+
+       ),
+
+       elevation: 10.0,       
+
+     ),
+```
+
+
+
+![](https://lh6.googleusercontent.com/oB28S8uSEJf0hr88dGwiiBx2vfT4EY4b7RaOr7PEZcUu29V5XQLSDxOfNtZBMh3sThbOJMfrOjFBO6F6XsuYqWPjIM6cPO_EO-RLKO_0k3kgTMUmMz9x3QIV2gHdDrfz1dr9OJu9)
