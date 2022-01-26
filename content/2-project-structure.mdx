@@ -17,20 +17,57 @@ keywords:
 Once you download the starter code for the 🚧 project you will see some 📄 files
 we have here
 
-- [ ]  📄**main.dart** - that's is the start of the app
-- [ ]  📄**data.dart** - which holds all their data in there
-we have four different models in the app.
-    - [ ]  📄 **food.dart** which has an image URL a name and a price and the image URL links to one of the images in the assets 📁 folder.
-    - [ ]  📄**order.dart** consist of a restaurant , food and quantity
-    - [ ]  📄 **restaurant.dart**  which contains an image URL name address reading and list of food
-    items which represents the menu
-    - [ ]  📄 **user.dart** class which consists of a name a list of orders and a list of orders that are in the cart
+![project structure](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643201005/Codelab/flutter_01_01_project_structure_gfptxc.png "project structure")
 
-back in **data.dart**  are we can see how we instantiate data.
-
-First we create all the different types of food each with our own image name and price.
-Next we create all the restaurants each with their own image URL name address reading and their own menu from the food items we instantiated above and now below this.
+* \- \[ ]  📄**main.dart** - that's is the start of the app
+* \- \[ ]  📄**data.dart** - which holds all their data in there we have place 
+* \- \[ ]  `models `📁 folder different models in the app.
+* \- \[ ]  `helpers `📁 folder for app helpers and utilities.
+      - \[ ]  📄 **app_constants.dart** holds constants for color themes and common constants that can be used across the app.
 
 The last thing to note is how we imported the images into our app. If we go into a **pubspec.yaml** file we can see that if we scroll down to assets all I did was uncomment.
 
-This images line and then replace it with assets / images and that's how we import all of our images from our assets images directory.
+This images line and then replace it with `assets/images` and that's how we import all of our images from our assets images directory.
+
+Note : 📄**main.dart**
+
+```
+// ignore_for_file: prefer_const_constructors
+
+import 'package:devfest_flutter_firebase_chat/helpers/app_constants.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'devfest - 2022 - chat app workshop',
+      theme: ThemeData(
+        primaryColor: AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR),
+        backgroundColor:
+            AppConstants.hexToColor(AppConstants.APP_BACKGROUND_COLOR),
+        primaryColorLight:
+            AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR_LIGHT),
+        dividerColor:
+            AppConstants.hexToColor(AppConstants.APP_BACKGROUND_COLOR_GRAY),
+        textTheme: TextTheme(
+          caption: TextStyle(
+              color: AppConstants.hexToColor(
+                  AppConstants.APP_PRIMARY_FONT_COLOR_WHITE)),
+        ),
+      ),
+      home: const MyHomePage(title: 'devfest - 2022 - workshops'),
+    );
+  }
+}
+ ..
+
+```
