@@ -15,13 +15,42 @@ keywords:
 ---
 # 📚 Appendix
 
- 
-
 > For your info
+>
+>
 >
 > `Exception has occurred.`
 >
 > `PlatformException (PlatformException(Error performing getDocuments, FAILED_PRECONDITION: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/gdgflutterfirebasechat/firestore/indexes?create_composite=ClRwcm9qZWN0cy9nZGdmbHV0dGVyZmlyZWJhc2VjaGF0L2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy9jaGF0cy9pbmRleGVzL18QARoMCghzZW5kZXJJZBABGgwKCHRvVXNlcklkEAEaDQoJdGltZXN0YW1wEAIaDAoIX19uYW1lX18QAg, null))`
+
+### Error with Firebase sdk add for Flutter 2.8
+
+https://stackoverflow.com/questions/52060516/how-to-change-android-minsdkversion-in-flutter-project
+
+update` local.properties`
+
+```
+flutter.minSdkVersion=21
+flutter.targetSdkVersion=30
+flutter.compileSdkVersion=30
+```
+
+Change like this from build.gradle
+
+```dart
+...
+  android {
+    compileSdkVersion localProperties.getProperty('flutter.compileSdkVersion').toInteger()
+
+defaultConfig {
+    minSdkVersion localProperties.getProperty('flutter.minSdkVersion').toInteger()
+    targetSdkVersion localProperties.getProperty('flutter.targetSdkVersion').toInteger()
+    versionCode flutterVersionCode.toInteger()
+    versionName flutterVersionName
+}
+```
+
+ 
 
 ### Explain 
 
@@ -39,8 +68,6 @@ runApp(MultiProvider(providers: [
     ], child: MyApp()))
 ```
 
-
-
 ```
 home: StreamBuilder<FirebaseUser>(
         stream: Provider.of<AuthService>(context,listen: false).user,
@@ -54,13 +81,9 @@ home: StreamBuilder<FirebaseUser>(
       ),
 ```
 
-
-
 ### Index for query
 
 > https://console.firebase.google.com/v1/r/project/flutterfirebasechat-622ea/firestore/indexes?create_composite=Cldwcm9qZWN0cy9mbHV0dGVyZmlyZWJhc2VjaGF0LTYyMmVhL2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy9jaGF0cy9pbmRleGVzL18QARoNCgltZW1iZXJJZHMYARoTCg9yZWNlbnRUaW1lc3RhbXAQAhoMCghfX25hbWVfXxAC
-
-
 
 ### Additional Screenshots
 
@@ -68,11 +91,7 @@ Test mode and - eu-west
 
 ![](https://lh3.googleusercontent.com/i8gqOhhF2qblZp04yuZ66KdY2htK9Ns_4pvQ4EbpySYhE29z6djWvYSKrhc2FXsY6ZGk6yprr__Uv7ZkbJ87IOJ1QASLgkDyEACm8Cnd1MQiUl2x9118hIiod_HVqphc4KaLucbD)
 
-
-
 ![](https://lh5.googleusercontent.com/FOWDkwIVi3jS2nSHCWeUfjhDrQzBSDirxdnWeVmy4e4sd_vUq8jYfqETZR8k5kzyfwv5NBIaUJaR-K6cIqoC3PUr7J5FflSXylVPW3PyuYbEEiRwXWu-TzE7xTDZST_TMo9ZRtkl)
-
-
 
 You should have node installed.
 
@@ -89,7 +108,5 @@ Deploy your functions:
 ```
 $ firebase deploy
 ```
-
-
 
 ![](https://lh5.googleusercontent.com/ARwEtFC7IdjA9cCFZH6wJN7TpCoijVqoJPah3eRiL4rSwHjCBbSH7EaNliQtq758eizp6LoHVtZ4ARkOcS08H1LU9HG9UvNCSye5RFpnxxOGePasrO1rzVT1Oq2CD1_7NrZE-cJf)
