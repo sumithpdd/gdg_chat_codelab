@@ -83,6 +83,9 @@ update main.dart main()
 runApp(
     MultiProvider(
       providers: [
+         ChangeNotifierProvider(
+          create: (_) => UserData(),
+        ),
         Provider<AuthService>(
           create: (_) => AuthService(),
         ),
