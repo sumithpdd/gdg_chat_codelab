@@ -24,13 +24,17 @@ We create or use  📁 Folder = > **services** -> File -> auth_service.dart
 
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643207682/Codelab/flutter_03_01_auth_service.dart_mdo96k.png)
 
+`we are adding FirebaseMessaging for token reference, not an important step`
+
 ```dart
+import 'package:devfest_flutter_firebase_chat/helpers/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   Stream<User?> get user => _auth.authStateChanges();
 
@@ -60,6 +64,7 @@ class AuthService {
     ]);
   }
 }
+
 ```
 
 This user should also be stored in a database, so that we can use it in chat.
@@ -68,44 +73,30 @@ Create a `constants.dart `📄 file under `helpers` 📁 folder
 
 ```dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:firebase_storage/firebase_storage.dart'; 
-
-final Firestore _db = Firestore.instance;
-
+final FirebaseFirestore _db = FirebaseFirestore.instance;
 final usersRef = _db.collection('users');
 
 final chatsRef = _db.collection('chats');
 
- 
-
 final FirebaseStorage _storage = FirebaseStorage.instance;
-
-final storageRef =_storage.ref();
+final storageRef = _storage.ref();
 ```
 
-And update auth_service.dart 📄 file
+go back and update `auth_service.dart` 📄 file
 
 ```dart
-  if (authResult.user != null) {
-
-        String token = await _firebaseMessaging.getToken();
-
-        usersRef.document(authResult.user.uid).setData({
-
-          'name': name,
-
-          'email': email, 
-
-          'profileImageUrl': '',
-
-          'bio': '',
-
-          'token': token,
-
-        });
-
-      }
+ if (authResult.user != null) {
++        String? token = await _messaging.getToken();
++        usersRef.doc(authResult.user!.uid).set({
++          'name': name,
++          'email': email,
++          'profileImageUrl': '',
++          'bio': '',
++          'token': token,
++       });
+      }
 ```
 
 Full code.=> <https://github.com/sumithpdd/gdg_flutter_firebase_chat/blob/Authentication/lib/services/auth_service.dart>
