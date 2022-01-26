@@ -15,11 +15,9 @@ keywords:
 ---
 # 🧑‍🤝‍🧑 Attendees Screen
 
-After login we need to redirect to attendees_screen, 
+After login we need to redirect to `attendees_screen`, 
 
-create a new 📄 file under screens 📁 folder
-
-\=> attendees_screen.dart
+Create a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart**
 
 ```
 import 'package:flutter/material.dart';
@@ -205,13 +203,9 @@ class UserData extends ChangeNotifier {
 }
 ```
 
-
-
 We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
 
-> `  provider: ^4.0.3 `
-
-
+> `provider: ^4.0.3`
 
 The attendees are all the users they have registered. We update our database service and create a new function to get all users.
 
@@ -262,8 +256,6 @@ class DataBaseService {
 ```
 
 ### Introduction to widget - separation of concern
-
-
 
 Create a 📁 folder for ‘widgets’ => add 📄 file all_attendees_widget.dart
 
@@ -443,8 +435,6 @@ class AllAttendees extends StatelessWidget {
 }
 ```
 
-
-
 ### User profile images
 
 Profile images will come from the network, We will use Flutter library to load and cache network images We are using cached_network_image ,add to pubspec.yaml and get the package..
@@ -460,8 +450,6 @@ class LoginScreen extends StatefulWidget {
 
    static final String id ='login_screen';
 ```
-
-
 
 ### Main.dart Refactoring
 
@@ -549,8 +537,6 @@ class MyApp extends StatelessWidget {
 
 }
 ```
-
-
 
  And modify run app to call MyApp(), I will also define all my providers for app
 
