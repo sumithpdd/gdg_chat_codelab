@@ -15,9 +15,64 @@ keywords:
 ---
 # 🧑‍🤝‍🧑 Attendees Screen
 
-After login we need to redirect to `attendees_screen`, 
+Now we have the chat screen working , user can also login , lets have some attendees and after the user logs in we we will redirect to `attendees_screen`, => and attendees can chat among themselves.
 
-Create a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart**
+First create database_service to call firestore database and retrieve users Create a new 📄 file under **services** 📁 folder  => database_service.dart 📄 file 
+
+```
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devfest_flutter_firebase_chat/helpers/constants.dart';
+import 'package:devfest_flutter_firebase_chat/models/app_user.dart';
+
+class DatabaseService {
+  Future<AppUser> getUser(String userId) async {
+    DocumentSnapshot userDoc = await usersRef.doc(userId).get();
+    return AppUser.fromDoc(userDoc);
+  }
+
+  Future<List<AppUser>> searchUsers(String currentUserId, String name) async {
+    QuerySnapshot usersSnap =
+        await usersRef.where('name', isGreaterThanOrEqualTo: name).get();
+    List<AppUser> users = [];
+    for (var doc in usersSnap.docs) {
+      AppUser user = AppUser.fromDoc(doc);
+      if (user.id != currentUserId) {
+        users.add(user);
+      }
+    }
+    return users;
+  }
+
+  Future<List<AppUser>> getAllUsers(String currentUserId) async {
+    QuerySnapshot userSnapshot = await usersRef.get();
+    List<AppUser> users = [];
+    for (var doc in userSnapshot.docs) {
+      AppUser user = AppUser.fromDoc(doc);
+      if (user.id != currentUserId) users.add(user);
+    }
+    return users;
+  }
+}
+
+```
+
+We will use provider to maintain state within app. 
+
+update pubspec.yaml 
+
+```
+  provider: ^6.0.2
+```
+
+update main.dart
+
+
+
+a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart**
+
+
+
+
 
 ```
 import 'package:flutter/material.dart';
