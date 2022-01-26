@@ -64,12 +64,11 @@ class AuthService {
     ]);
   }
 }
-
 ```
 
 This user should also be stored in a database, so that we can use it in chat.
 
-Create a `constants.dart `📄 file under `helpers` 📁 folder
+Create a `constants.dart`📄 file under `helpers` 📁 folder
 
 ```dart
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -101,57 +100,37 @@ go back and update `auth_service.dart` 📄 file
 
 Full code.=> <https://github.com/sumithpdd/gdg_flutter_firebase_chat/blob/Authentication/lib/services/auth_service.dart>
 
-Modify user_models.dart to match these fields and map data from the database.
+Create a new 📄 file `app_user.dart`  under `models` 📁 folder to match these fields and map data from the database.
 
 ```dart 
-class User {
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  final String id;
+class AppUser {
+  final String? id;
+  final String? name;
+  final String? profileImageUrl, email, bio, token;
+  // {} named parameters
+  AppUser(
+      {this.id,
+      this.name,
+      this.profileImageUrl,
+      this.email,
+      this.bio,
+      this.token});
 
-  final String name;
-
-  final String profileImageUrl, email, bio, token;
-
-  // {} named parameters
-
-  User(
-
-      {this.id,
-
-      this.name,
-
-      this.profileImageUrl,
-
-      this.email,
-
-      this.bio,
-
-      this.token});
-
- 
-
-  factory User.fromDoc(DocumentSnapshot doc) {
-
-    return User(
-
-        id: doc.documentID,
-
-        name: doc\['name'],
-
-        profileImageUrl: doc\['profileImageUrl'],
-
-        email: doc\['email'],
-
-        bio: doc\['bio'],
-
-        token: doc\['token']);
-
-  }
-
+  factory AppUser.fromDoc(DocumentSnapshot doc) {
+    return AppUser(
+        id: doc.id,
+        name: doc['name'],
+        profileImageUrl: doc['profileImageUrl'],
+        email: doc['email'],
+        bio: doc['bio'],
+        token: doc['token']);
+  }
 }
 ```
 
-Highlight this piece of code
+FYI : understand this piece of code
 
 ```dart
   // {} named parameters
