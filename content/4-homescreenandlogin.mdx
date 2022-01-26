@@ -20,79 +20,51 @@ keywords:
 
 Lets first add login screen for that we need to call `auth service`, 
 
-We create/use  📁 Folder = > **services** -> File -> auth_service.dart 
+We create or use  📁 Folder = > **services** -> File -> auth_service.dart 
 
-![](https://lh6.googleusercontent.com/Lk7Jw0Uz-qisdjEl2B--b8QzB2vbqCb_OylwIh3qghHB4t5ulXZ0dPoszLh310Rpce4xyhRj_Fdj7XenBV_K1QUxceODhRahqTjsS2jQTXnTTmE7CFC4JPhOph0yh_-Ya55hl13r)
+![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643207682/Codelab/flutter_03_01_auth_service.dart_mdo96k.png)
 
 ```dart
-Future<void> signup(String name, String email, String password) async {
-
-Future<void> login(String email, String password) async {
-
-Future<void> logout() {
-
-}
-
- 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 
 class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  Stream<User?> get user => _auth.authStateChanges();
 
-   Stream<FirebaseUser> get user => _firebaseAuth.onAuthStateChanged;
+  Future<void> signup(String name, String email, String password) async {
+    try {
+      var authResult = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (authResult.user != null) {}
+    } on PlatformException {
+      rethrow;
+    }
+  }
 
- 
+  Future<void> login(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } on PlatformException {
+      rethrow;
+    }
+  }
 
-  Future<void> signup(String name, String email, String password) async {
-
-    try {
-
-      AuthResult authResult = await _firebaseAuth.createUserWithEmailAndPassword(
-
-          email: email, password: password);
-
- 
-
-    } on PlatformException catch (error) {
-
-      throw (error);
-
-    }
-
-  }
-
- 
-
-  Future<void> login(String email, String password) async {
-
-    try {
-
-      await _firebaseAuth.signInWithEmailAndPassword(
-
-          email: email, password: password);
-
-    } on PlatformException catch (error) {
-
-      throw (error);
-
-    }
-
-  }
-
- 
-
-  Future<void> logout() {
-
-    Future.wait(\[_firebaseAuth.signOut()]);
-
-  }
-
+  Future<void> logout() async {
+    Future.wait([
+      _auth.signOut(),
+    ]);
+  }
 }
 ```
 
-I would also like this user to be stored in a database, so that we can use it in chat.
+This user should also be stored in a database, so that we can use it in chat.
 
-I will create a constants.dart file under helpers 📁 folder
+Create a `constants.dart `📄 file under `helpers` 📁 folder
 
 ```dart
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -112,7 +84,7 @@ final FirebaseStorage _storage = FirebaseStorage.instance;
 final storageRef =_storage.ref();
 ```
 
-And update auth_service.dart
+And update auth_service.dart 📄 file
 
 ```dart
   if (authResult.user != null) {
