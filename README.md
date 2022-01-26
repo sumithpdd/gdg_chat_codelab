@@ -43,7 +43,7 @@ Visit `http://localhost:8000/` to view the app.
 
 ## 🔧 Configure
 
-Write markdown files in `content` folder.
+Write markdown files in `content` 📁 folder.
 
 Open `config.js` for templating variables. Broadly configuration is available for `gatsby`, `header`, `sidebar` and `siteMetadata`.
 
