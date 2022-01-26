@@ -53,7 +53,6 @@ class DatabaseService {
     return users;
   }
 }
-
 ```
 
 ### Model to Store Current User data
@@ -66,7 +65,6 @@ import 'package:flutter/material.dart';
 class UserData extends ChangeNotifier {
   String? currentUserId;
 }
-
 ```
 
 We will use provider to maintain state within app. We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
@@ -108,7 +106,7 @@ home: _getScreenId(),
       },
 ```
 
-function _getScreenId()
+We got all our references now we need to navigate from main to attendees screen if we are logged in. update function _getScreenId() in  main.dart
 
 ```
 Widget _getScreenId() {
@@ -283,8 +281,9 @@ class AllAttendees extends StatelessWidget {
     );
   }
 }
-
 ```
+
+![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643232802/Codelab/flutter_06_attendees_screen_h9smua.png)
 
 ### Introduction to widget - separation of concern
 
@@ -381,7 +380,6 @@ class AllAttendees extends StatelessWidget {
     );
   }
 }
-
 ```
 
 > and update attendees_screen.dart to use this widget
@@ -392,7 +390,7 @@ Profile images will come from the network, We will use Flutter library to load a
 
 >  `cached_network_image: ^2.0.0`
 
-We got all our references now we need to navigate from main to attendees screen if we are logged in.
+
 
 Quickly update login screen and give it an id , will be used for routes
 
