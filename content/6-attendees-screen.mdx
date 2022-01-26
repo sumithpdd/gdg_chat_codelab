@@ -56,6 +56,19 @@ class DatabaseService {
 
 ```
 
+
+
+create a new model to hold user_data -> Create a new file user_data.dart under models
+
+```
+import 'package:flutter/material.dart';
+
+class UserData extends ChangeNotifier {
+  String? currentUserId;
+}
+
+```
+
 We will use provider to maintain state within app. 
 
 update pubspec.yaml 
@@ -64,9 +77,51 @@ update pubspec.yaml
   provider: ^6.0.2
 ```
 
-update main.dart
+update main.dart main()
 
+```
+runApp(
+    MultiProvider(
+      providers: [
+        Provider<AuthService>(
+          create: (_) => AuthService(),
+        ),
+        Provider<DatabaseService>(
+          create: (_) => DatabaseService(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
+```
 
+modify home and add routes for mavigation
+
+```
+home: _getScreenId(),
+      routes: {
+        LoginScreen.id: (context) => const LoginScreen(),
+        AttendeesScreen.id: (context) => const AttendeesScreen(),
+      },
+```
+
+function _getScreenId()
+
+```
+Widget _getScreenId() {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData) {
+          Provider.of<UserData>(context).currentUserId = snapshot.data!.uid;
+          return const AttendeesScreen();
+        } else {
+          return LoginScreen();
+        }
+      },
+    );
+  }
+```
 
 a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart**
 
