@@ -17,7 +17,7 @@ keywords:
 
 Now we have the chat screen working , user can also login , lets have some attendees and after the user logs in we we will redirect to `attendees_screen`, => and attendees can chat among themselves.
 
-First create database_service to call firestore database and retrieve users Create a new 📄 file under **services** 📁 folder  => database_service.dart 📄 file 
+First create database_service to call firestore database and retrieve users Create a new 📄 file under **services** 📁 folder  => database_service.dart 📄 file , The attendees are all the users they have registered. We update our database service and create a new function to get all users.
 
 ```
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -56,9 +56,9 @@ class DatabaseService {
 
 ```
 
+### Model to Store Current User data
 
-
-create a new model to hold user_data -> Create a new file user_data.dart under models
+To store current user data we will create a model -> user_data.dart under models 📁 folder it extends ChangeNotifierProvider
 
 ```
 import 'package:flutter/material.dart';
@@ -69,7 +69,7 @@ class UserData extends ChangeNotifier {
 
 ```
 
-We will use provider to maintain state within app. 
+We will use provider to maintain state within app. We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
 
 update pubspec.yaml 
 
@@ -98,7 +98,7 @@ runApp(
   );
 ```
 
-modify home and add routes for mavigation
+modify home and add routes for navigation
 
 ```
 home: _getScreenId(),
@@ -128,244 +128,162 @@ Widget _getScreenId() {
 
 a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart**
 
-
-
-
-
 ```
+import 'package:devfest_flutter_firebase_chat/helpers/app_constants.dart';
 import 'package:flutter/material.dart';
-
-import 'package:gdg_flutter_firebase_chat/models/user.dart';
-
-import 'package:gdg_flutter_firebase_chat/models/user_data.dart';
-
-import 'package:gdg_flutter_firebase_chat/services/auth_service.dart';
-
-import 'package:gdg_flutter_firebase_chat/services/database_service.dart';
-
-import 'package:gdg_flutter_firebase_chat/widgets/all_attendees_widget.dart';
-
+import 'package:devfest_flutter_firebase_chat/models/app_user.dart';
+import 'package:devfest_flutter_firebase_chat/models/user_data.dart';
+import 'package:devfest_flutter_firebase_chat/services/auth_service.dart';
+import 'package:devfest_flutter_firebase_chat/services/database_service.dart';
 import 'package:provider/provider.dart';
 
- 
+import 'chat_screen.dart';
 
 class AttendeesScreen extends StatefulWidget {
+  static const String id = 'attendees_screen';
 
-  static final String id ='attendees_screen';
+  const AttendeesScreen({Key? key}) : super(key: key);
 
- 
-
- @override
-
- _AttendeesScreenState createState() => _AttendeesScreenState();
-
+  @override
+  _AttendeesScreenState createState() => _AttendeesScreenState();
 }
-
- 
 
 class _AttendeesScreenState extends State<AttendeesScreen> {
-
- List<User> _users = \[];
-
- @override
-
- void initState() {
-
-   super.initState();
-
-   _setupAttendees();
-
- }
-
- 
-
- _setupAttendees() async {
-
-   String currentUserId =Provider.of<UserData>(context, listen: false).currentUserId;
-
-   List<User> users = await Provider.of<DataBaseService>(context, listen: false)
-
-                     .getAllUsers(currentUserId);
-
-   if (mounted) {
-
-     setState(() {
-
-       _users = users;
-
-     });
-
-   }
-
- }
-
- @override
-
- Widget build(BuildContext context) {
-
-   
-
-   return Scaffold(
-
-     backgroundColor: Theme.of(context).primaryColor,
-
-     appBar: AppBar(
-
-       leading: IconButton(
-
-         icon: Icon(Icons.menu),
-
-         iconSize: 30.0,
-
-         color: Colors.white,
-
-         onPressed: () {},
-
-       ),
-
-       title: Text(
-
-         'Attendees',
-
-         style: TextStyle(
-
-           fontSize: 28.0,
-
-           fontWeight: FontWeight.bold,
-
-         ),
-
-       ),
-
-       elevation: 0.0,
-
-       actions: <Widget>[
-
-         IconButton(
-
-           icon: Icon(Icons.exit_to_app),
-
-           onPressed: Provider.of<AuthService>(context, listen: false).logout,
-
-         ),
-
-       ],
-
-     ),
-
-     body: Column(
-
-       children: <Widget>[
-
-         Expanded(
-
-           child: Container(
-
-             decoration: BoxDecoration(
-
-               color: Theme.of(context).accentColor,
-
-               borderRadius: BorderRadius.only(
-
-                 topLeft: Radius.circular(30.0),
-
-                 topRight: Radius.circular(30.0),
-
-               ),
-
-             ),
-
-             child: Column(
-
-               children: <Widget>[
-
-                  AllAttendees(users:_users),
-
-               ],
-
-             ),
-
-           ),
-
-         ),
-
-       ],
-
-     ),
-
-   );
-
- }
-
+  List<AppUser> _users = [];
+  @override
+  void initState() {
+    super.initState();
+    _setupAttendees();
+  }
+
+  _setupAttendees() async {
+    String currentUserId =
+        Provider.of<UserData>(context, listen: false).currentUserId!;
+    List<AppUser> users =
+        await Provider.of<DatabaseService>(context, listen: false)
+            .getAllUsers(currentUserId);
+    if (mounted) {
+      setState(() {
+        _users = users;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
+      appBar: AppBar(
+        backgroundColor:
+            AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR),
+        title: const Text(
+          'Attendees',
+          style: TextStyle(
+            fontSize: 28.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.exit_to_app),
+            onPressed: Provider.of<AuthService>(context, listen: false).logout,
+          ),
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          AllAttendees(appUsers: _users),
+        ],
+      ),
+    );
+  }
 }
-```
 
-### Model to Store Current User data
+class AllAttendees extends StatelessWidget {
+  final List<AppUser> appUsers;
 
-To store current user data we will create a model -> user_data.dart under models 📁 folder it extends ChangeNotifierProvider
+  const AllAttendees({required this.appUsers, Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String? currentUserId =
+        Provider.of<UserData>(context, listen: false).currentUserId;
 
-```
-import 'package:flutter/cupertino.dart';
-
- 
-
-class UserData extends ChangeNotifier {
-
-  String currentUserId;
-
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color:
+              AppConstants.hexToColor(AppConstants.APP_BACKGROUND_COLOR_WHITE),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: appUsers.length,
+            itemBuilder: (BuildContext context, int index) {
+              final AppUser user = appUsers[index];
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChatScreen(
+                        // currentUserId: currentUserId!,
+                        // toUser: user,
+                        ),
+                  ),
+                ),
+                child: Container(
+                  margin:
+                      const EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: AppConstants.hexToColor(
+                        AppConstants.APP_PRIMARY_TILE_COLOR),
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          const SizedBox(width: 10.0),
+                          Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  user.name!,
+                                  style: TextStyle(
+                                    color: AppConstants.hexToColor(AppConstants
+                                        .APP_PRIMARY_FONT_COLOR_WHITE),
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5.0),
+                                Text(
+                                  user.bio!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }
-```
 
-We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
-
-> `provider: ^4.0.3`
-
-The attendees are all the users they have registered. We update our database service and create a new function to get all users.
-
-services
-
-📄 File => database_service.dart
-
-```
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:gdg_flutter_firebase_chat/helpers/constants.dart';
-
-import 'package:gdg_flutter_firebase_chat/models/user.dart';
-
- 
-
-class DataBaseService {
-
- Future<User> getUser(String userId) async {
-
-   DocumentSnapshot userDoc = await usersRef.document(userId).get();
-
-   return User.fromDoc(userDoc);
-
- }
-
- 
-
- Future<List<User>> getAllUsers(String currentUserId) async {
-
-   QuerySnapshot userSnapshot = await usersRef.getDocuments();
-
-   List<User> users = \[];
-
-   userSnapshot.documents.forEach((doc) {
-
-     User user = User.fromDoc(doc);
-
-     if (user.id != currentUserId) users.add(user);
-
-   });
-
-   return users;
-
- }
-
-}
 ```
 
 ### Introduction to widget - separation of concern
@@ -373,182 +291,102 @@ class DataBaseService {
 Create a 📁 folder for ‘widgets’ => add 📄 file all_attendees_widget.dart
 
 ```
+import 'package:devfest_flutter_firebase_chat/helpers/app_constants.dart';
+import 'package:devfest_flutter_firebase_chat/models/app_user.dart';
+import 'package:devfest_flutter_firebase_chat/models/user_data.dart';
+import 'package:devfest_flutter_firebase_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'package:gdg_flutter_firebase_chat/models/user.dart';
-
-import 'package:gdg_flutter_firebase_chat/screens/chat_screen.dart';
-
-import 'package:cached_network_image/cached_network_image.dart';
-
- 
+import 'package:provider/provider.dart';
 
 class AllAttendees extends StatelessWidget {
-
- final List<User> users;
-
- 
-
- const AllAttendees({this.users});
-
- @override
-
- Widget build(BuildContext context) {
-
-   return Expanded(
-
-     child: Container(
-
-       decoration: BoxDecoration(
-
-         color: Colors.white,
-
-       
-
-       ),
-
-       child: Padding(
-
-         padding: const EdgeInsets.all(8.0),
-
-         child: ListView.builder(
-
-           itemCount: users.length,
-
-           itemBuilder: (BuildContext context, int index) {
-
-             final User user = users\[index];
-
-             return GestureDetector(
-
-               onTap: () => Navigator.push(
-
-                 context,
-
-                 MaterialPageRoute(
-
-                   builder: (_) => ChatScreen(
-
-                       // user: chat.sender,
-
-                       ),
-
-                 ),
-
-               ),
-
-               child: Container(
-
-                 margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
-
-                 padding:
-
-                     EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-
-                 decoration: BoxDecoration(
-
-                   color: Color(0xFFFFEFEE),
-
-                   borderRadius: BorderRadius.all( Radius.circular(20.0)
-
-                   ),
-
-                 ),
-
-                 child: Row(
-
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                   children: <Widget>[
-
-                     Row(
-
-                       children: <Widget>[
-
-                         CircleAvatar(
-
-                           radius: 35.0,
-
-                           backgroundImage: user.profileImageUrl.isEmpty
-
-                               ? AssetImage('assets/images/user_placeholder.jpg')
-
-                               : CachedNetworkImageProvider(user.profileImageUrl),
-
-                         ),
-
-                         SizedBox(width: 10.0),
-
-                         Column(
-
-                           crossAxisAlignment: CrossAxisAlignment.start,
-
-                           children: <Widget>[
-
-                             Text(
-
-                               user.name,
-
-                               style: TextStyle(
-
-                                 color: Colors.grey,
-
-                                 fontSize: 15.0,
-
-                                 fontWeight: FontWeight.bold,
-
-                               ),
-
-                             ),
-
-                             SizedBox(height: 5.0),
-
-                             Text(
-
-                               user.bio,
-
-                               style: TextStyle(
-
-                                 color: Colors.grey,
-
-                                 fontSize: 15.0,
-
-                               ),
-
-                             ),
-
-                           ],
-
-                         ),
-
-                       ],
-
-                     ),
-
-                   ],
-
-                 ),
-
-               ),
-
-             );
-
-           },
-
-         ),
-
-       ),
-
-     ),
-
-   );
-
- }
-
+  final List<AppUser> appUsers;
+
+  const AllAttendees({required this.appUsers, Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String? currentUserId =
+        Provider.of<UserData>(context, listen: false).currentUserId;
+
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color:
+              AppConstants.hexToColor(AppConstants.APP_BACKGROUND_COLOR_WHITE),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: appUsers.length,
+            itemBuilder: (BuildContext context, int index) {
+              final AppUser user = appUsers[index];
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChatScreen(
+                        // currentUserId: currentUserId!,
+                        // toUser: user,
+                        ),
+                  ),
+                ),
+                child: Container(
+                  margin:
+                      const EdgeInsets.only(top: 5.0, bottom: 5.0, right: 5.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: AppConstants.hexToColor(
+                        AppConstants.APP_PRIMARY_TILE_COLOR),
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          const SizedBox(width: 10.0),
+                          Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  user.name!,
+                                  style: TextStyle(
+                                    color: AppConstants.hexToColor(AppConstants
+                                        .APP_PRIMARY_FONT_COLOR_WHITE),
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5.0),
+                                Text(
+                                  user.bio!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }
+
 ```
 
-### User profile images
+> and update attendees_screen.dart to use this widget
+
+# User profile images
 
 Profile images will come from the network, We will use Flutter library to load and cache network images We are using cached_network_image ,add to pubspec.yaml and get the package..
 
