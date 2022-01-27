@@ -259,18 +259,16 @@ Future<String> uploadMessageImage(File imageFile) async {
 
 In chat_screen.dart we update _buildMessage
 
-And check if message.imageurl == null and remove  Text(              message.text, …
+And check if message.imageurl == null and remove Text(message.text!,
+
+… and refactor into its own functions
 
 ```
-   children: <Widget>[
-
-           message.imageUrl == null
-
-               ? _buildText(isMe, message)
-
-               : _buildImage(context, message),
-
-           SizedBox(height: 8.0),
+ children: <Widget>[
+            message.imageUrl == null
+                ? _buildText(isMe, message)
+                : _buildImage(context, message),
+            const SizedBox(height: 8.0),
 ```
 
 Add the new methods before build
