@@ -500,7 +500,6 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 }
-
 ```
 
 update attendees_screen.dart file to include the new appdrawer 
@@ -540,7 +539,6 @@ Widget profileImage(AppUser user, {double avatarRadius = 25}) {
     );
   }
 }
-
 ```
 
 place the image before the name in the drawer app_drawer_widget.dart 
@@ -552,6 +550,4 @@ place the image before the name in the drawer app_drawer_widget.dart
                   user.name!,
 ```
 
-Finally add a new screen to edit user profile and upload/edit profile image
-
-for that first we need a service to upload image to **firebase storage** see next section =>
+Finally add a new screen to edit user profile and upload/edit profile image for that first we need a service to upload image to **firebase storage** see next section =>
