@@ -166,56 +166,35 @@ List<Message> _messages = [];
   }
 ```
 
-Update message time with
+Update message time in the text with
 
 ```
   Text(
-
-                 '${timeFormat.format(message.timestamp.toDate())}',
+  '${timeFormat.format(message.timestamp.toDate())}',
 ```
 
 In the  `void _handleSubmitted(String` , update code to pass new values and call the database service
 
 ```
 void _handleSubmitted(String text) {
+    _textMessageController.clear();
 
-   _textMessageController.clear();
+    setState(() {
+      _isComposing = false;
+    });
+    Message message = Message(
+      senderId: widget.currentUserId,
+      toUserId: widget.toUser.id,
+      timestamp: Timestamp.fromDate(DateTime.now()),
+      text: text,
+      isLiked: true,
+      unread: true,
+    );
+    setState(() {
+      _messages.insert(0, message);
+    });
+  }
 
- 
-
-   setState(() {
-
-     _isComposing = false;
-
-   });
-
-   Message message = Message(
-
-     senderId: widget.currentUserId,
-
-     toUserId: widget.toUserId,
-
-     timestamp: Timestamp.fromDate(DateTime.now()),
-
-     text: text,
-
-     isLiked: true,
-
-     unread: true,
-
-   );
-
-   setState(() {
-
-     _messages.insert(0, message);
-
-   });
-
-       _dataBaseService.sendChatMessage(message);
-
- 
-
- }
 ```
 
 And finally update the `isMe`code to get value from the widget
@@ -230,38 +209,28 @@ Chat screen is called through the attendees screen.
 
 So update the all_attendees_widget.dart
 
-In the build get the current user id
+Note : In the build get the current user id
 
 ```
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
+    String? currentUserId =
+        Provider.of<UserData>(context, listen: false).currentUserId;
 
-       String currentUserId =
-
-       Provider.of<UserData>(context, listen: false).currentUserId;
 ```
 
-And pass it to the chatscreen
+And pass it to the chatscreen , update GestureDetector
 
 ```
 return GestureDetector(
-
-               onTap: () => Navigator.push(
-
-                 context,
-
-                 MaterialPageRoute(
-
-                   builder: (_) => ChatScreen(
-
-                     currentUserId: currentUserId,
-
-                     toUserId: user.id,
-
-                   ),
-
-                 ),
-
-               ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChatScreen(
+                        currentUserId: currentUserId!,
+                        toUser: user,
+                        ),
+                  ),
+                ),
 ```
 
 ![](https://lh4.googleusercontent.com/KrQ0Q44DBwIwR9TI3vDFWrZ8dJwtNT3NVuaPbYh_JdNEi4iNMukWLCpTP8VS5kHfPEY5fTgzIYyWorlWbpL_g4sUGqkl6LGKjdvlxJBnVD-ZWhJwaiFgBg-jiHNPd2aForffvaQ7)
