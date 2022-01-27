@@ -107,7 +107,6 @@ class Message {
         timestamp: doc['timestamp']);
   }
 }
-
 ```
 
 We will add dateFormat to our constants.dart 📄 file
@@ -119,8 +118,6 @@ To get the dateformat import package - intl - pubspec.yaml
 ```
 final DateFormat timeFormat = DateFormat('E, h:mm a');
 ```
-
-
 
 #### Refactor Chat Screen
 
@@ -144,7 +141,7 @@ We need to bring messages from our database. so remove   reference to dummy data
 List<Message> _messages = [];
 ```
 
-`And add database service , also that needs to be initialized ` , create a private function to process through the messages and initialize the message list
+`And add database service , also that needs to be initialized` , create a private function to process through the messages and initialize the message list
 
 ```
 List<Message> _messages = [];
@@ -193,8 +190,8 @@ void _handleSubmitted(String text) {
     setState(() {
       _messages.insert(0, message);
     });
+     _databaseService.sendChatMessage(message);
   }
-
 ```
 
 And finally update the `isMe`code to get value from the widget
@@ -215,7 +212,6 @@ Note : In the build get the current user id
   Widget build(BuildContext context) {
     String? currentUserId =
         Provider.of<UserData>(context, listen: false).currentUserId;
-
 ```
 
 And pass it to the chatscreen , update GestureDetector
@@ -233,9 +229,17 @@ return GestureDetector(
                 ),
 ```
 
-![](https://lh4.googleusercontent.com/KrQ0Q44DBwIwR9TI3vDFWrZ8dJwtNT3NVuaPbYh_JdNEi4iNMukWLCpTP8VS5kHfPEY5fTgzIYyWorlWbpL_g4sUGqkl6LGKjdvlxJBnVD-ZWhJwaiFgBg-jiHNPd2aForffvaQ7)
+You may receive an indexing error, go to console and **click on the link to rebuild index**
 
-## Step 6 -Sending Picture Messages
+> Error: 
+>
+> FirebaseException (\[cloud_firestore/failed-precondition] The query requires an index. You can create it here: ..
+
+![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643294195/Codelab/flutter_07_indexing_error_rzwqpm.png)
+
+![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643295886/Codelab/flutter_08_bidirectional_chat_syta1q.png)
+
+## Sending Picture Messages
 
 We would also like to send pictures in the chat.
 
