@@ -19,7 +19,7 @@ Here we will look at firebase storage, we have images for the attendees 📇 pro
 
 ### Image Upload
 
- Create a new file storage_service.dart under services folder , install a package flutter_image_compress , update pubspec.yaml so that we compress images during storage.
+Create a new file storage_service.dart under services folder , install a package flutter_image_compress , update pubspec.yaml so that we compress images during storage.
 
  flutter_image_compress: ^1.1.0
 
@@ -94,10 +94,9 @@ class StorageService {
     return downloadUrl;
   }
 }
-
 ```
 
-Also update database service to add a function to update user database_service.dart
+Also update database service to add a function to update user database_service.dart 📄 file
 
 ```
  static void updateUser(AppUser user) {
@@ -114,9 +113,9 @@ Now backend is ready, lets work on the screen create a new file edit_profile_scr
 ### EditProfile Screen
 
 Create a new 📄 file edit_profile_screen.dart under screens 📁 folder.
-we need a image picker, install a new package **image_picker: ^0.8.4+5**
+we need a image picker, install a new package **`image_picker: ^0.8.4+5`**
 
-add this code to edit_profile_screen.dart file
+add this code to edit_profile_screen.dart 📄 file
 
 ```
 import 'dart:io';
@@ -309,7 +308,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 }
 ```
-to navigate to this screen modify onpressed for the Edit Profile icon button in app_drawer_widget.dart , fix the imports
+
+to navigate to this screen modify **onpressed** for the Edit Profile icon button in app_drawer_widget.dart , fix the imports
 
 ```
    onPressed: () => Navigator.push(
@@ -322,6 +322,7 @@ to navigate to this screen modify onpressed for the Edit Profile icon button in 
                   ),
                   color:
 ```
+
 ### Information and FYI
 
 We used few new packages in the new code lets add them to pubspec.yaml and run pub get
@@ -337,18 +338,12 @@ NSPhotoLibraryUsageDescription
 
 NSCameraUsageDescription
 
-
-
 ![](https://lh3.googleusercontent.com/9kDtm6HcavLnPd5RihgkRFRMndhgj7Oj5M57c8WhbMKjwojImWtPt0sSMwOT7jUk1yZTUTSberacCTiJhtoNF169reNlEJq9veGChNky0POXm_wTbH6jMYBMaezIQBhXAYtob0o2)
-
-
-
-![](https://lh3.googleusercontent.com/-PxSdCmL9dStOcYko_QkCGr-OVvEb5D7WbR2tNfyD-42wZ80zAu0UJQhQFpf1igm1nRt7zha8_ZefkHywVmVbqXjsL2NR7_vCZKo31nOqsCuN3NG7UAqVHc7VodnqwnaJLSp8GQ5)![](https://lh3.googleusercontent.com/lobodaHtbrbiXAQAo6dpp-9fWXFOPqZsYZ9Cc45zHdvv7TXq9CjlD9GtjCv1A-YxGkEdMBJnRZCZeW37c_ncEdEL5Rtwbk403cjqI0nrR7i7YHnXaVRGpLn4MA6adqas6FUmy9xs)
 
 if you get an error
 
 > MissingPluginException (MissingPluginException(No implementation found for method pickImage on channel plugins.flutter.io/image_picker))
 
-run `flutter clean` and` restart the app`
+run `flutter clean` and`restart the app`
 
 ![Edit profile Image Picker](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643275707/Codelab/flutter_06_edit_profile_imagepicker_icu5nc.png "Edit profile Image Picker")
