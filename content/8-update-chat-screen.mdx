@@ -259,7 +259,7 @@ Future<String> uploadMessageImage(File imageFile) async {
 
 In chat_screen.dart we update _buildMessage
 
-And check if message.imageurl == null and remove Text(message.text!,
+And check if message.imageurl == null and remove **Text(message.text!,**
 
 … and refactor into its own functions
 
@@ -274,157 +274,94 @@ And check if message.imageurl == null and remove Text(message.text!,
 Add the new methods before build
 
 ```
-_buildText(bool isMe,Message message) {
+_buildText(bool isMe, Message message) {
+    return Text(
+      message.text!,
+      style: TextStyle(
+        color: isMe
+            ? AppConstants.hexToColor(AppConstants.APP_PRIMARY_COLOR_BLACK)
+            : AppConstants.hexToColor(AppConstants.APP_BACKGROUND_COLOR_GRAY),
+        fontSize: 15.0,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
 
-   return Text(
-
-             message.text,
-
-             style: TextStyle(
-
-               color: isMe ? Colors.white60 : Colors.blueGrey,
-
-               fontSize: 12.0,
-
-               fontWeight: FontWeight.w600,
-
-             ),
-
-           );
-
- }
-
-_buildImage(BuildContext context,Message message) {
-
-   final size = MediaQuery.of(context).size;
-
-   return Container(
-
-     height: size.height * 0.2,
-
-     width: size.width * 0.6,
-
-     decoration: BoxDecoration(
-
-         borderRadius: BorderRadius.circular(20.0),
-
-         image: DecorationImage(
-
-           fit: BoxFit.cover,
-
-           image: CachedNetworkImageProvider(message.imageUrl),
-
-         )),
-
-   );
-
- }
+  _buildImage(BuildContext context, Message message) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      height: size.height * 0.2,
+      width: size.width * 0.6,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: CachedNetworkImageProvider(message.imageUrl!),
+          )),
+    );
+  }
 ```
 
-Add to onPressed of our camera icon
+Add to onPressed of our camera icon _buildMessageComposer()
 
 ```
-children: <Widget>[
-
-         RawMaterialButton(
-
-           onPressed: () async {
-
-             File imageFile = await ImagePicker.pickImage(
-
-               source: ImageSource.gallery,
-
-             );
-
-             if (imageFile != null) {
-
-               String imageUrl =
-
-                   await Provider.of<StorageService>(context, listen: false)
-
-                       .uploadMessageImage(imageFile);
-
-               _handleSubmitted(null, imageUrl);
-
-             }
-
-           },
+RawMaterialButton(
+            onPressed: () async {
+              XFile? imageFile = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+              );
+              if (imageFile != null) {
+                String imageUrl =
+                    await Provider.of<StorageService>(context, listen: false)
+                        .uploadMessageImage(File(imageFile.path));
+                _handleSubmitted(null, imageUrl);
+              }
+            },
+            child: Icon(
+              Icons.camera_alt,
 ```
 
 Update _handleSubmitted to take additional parameter
 
 ```
-void _handleSubmitted(String text, String imageUrl) {
+void _handleSubmitted(String? text, String? imageUrl) {
+    if ((text != null && text.trim().isNotEmpty) || imageUrl != null) {
+      if (imageUrl == null) {
+        //text message
 
-   if ((text != null && text.trim().isNotEmpty) || imageUrl != null) {
-
-     if (imageUrl == null) {
-
-       //text message
-
- 
-
-       setState(() {
-
-         _isComposing = false;
-
-       });
-
-     }
-
-     Message message = Message(
-
-       senderId: widget.currentUserId,
-
-       toUserId: widget.toUserId,
-
-       imageUrl: imageUrl,
-
-       timestamp: Timestamp.fromDate(DateTime.now()),
-
-       text: text,
-
-       isLiked: true,
-
-       unread: true,
-
-     );
-
-     setState(() {
-
-       _messages.insert(0, message);
-
-     });
-
-     _dataBaseService.sendChatMessage(message);
-
-   }
-
- }
+        setState(() {
+          _isComposing = false;
+        });
+      }
+      Message message = Message(
+        senderId: widget.currentUserId,
+        toUserId: widget.toUser.id,
+        imageUrl: imageUrl,
+        timestamp: Timestamp.fromDate(DateTime.now()),
+        text: text,
+        isLiked: true,
+        unread: true,
+      );
+      setState(() {
+        _messages.insert(0, message);
+      });
+      _databaseService.sendChatMessage(message);
+    }
+  }
 ```
 
  And update its usages.
 
 ```
-onPressed: _isComposing
-
-               ? () => _handleSubmitted(
-
-                     _textMessageController.text,
-
-                     null,
-
-                   )
-
-               : null,
+   onPressed: _isComposing
+                ? () => _handleSubmitted(_textMessageController.text, null)
+                : null,
 ```
 
 Finally add Provider for StorageService in main.dart
 
 ```
-Provider<StorageService>(
-
-     create: (_) => StorageService(),
-
-   ),
+ Provider<StorageService>(
+          create: (_) => StorageService(),
+        ),
 ```
