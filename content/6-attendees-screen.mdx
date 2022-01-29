@@ -15,9 +15,11 @@ keywords:
 ---
 # 🧑‍🤝‍🧑 Attendees Screen
 
-Now we have the chat screen working , user can also login , lets have some attendees and after the user logs in we we will redirect to `attendees_screen`, => and attendees can chat among themselves.
+Now we have the chat screen working , user can also login , lets have some attendees and after the user logs-in they will view all attendees in the event  `attendees_screen`, => and attendees can chat among themselves.
 
-First create database_service to call firestore database and retrieve users Create a new 📄 file under **services** 📁 folder  => database_service.dart 📄 file , The attendees are all the users they have registered. We update our database service and create a new function to get all users.
+First create database_service to call **firestore database** and retrieve users.
+
+Create a new 📄 file under **services** 📁 folder  => **database_service.dart** 📄 file , The attendees are all the users they have registered. We update our database service and create a new function to get all users.
 
 ```
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -57,7 +59,7 @@ class DatabaseService {
 
 ### Model to Store Current User data
 
-To store current user data we will create a model -> user_data.dart under models 📁 folder it extends ChangeNotifierProvider
+To store current user data we will create a **model** -> **user_data.dart** under **models** 📁 folder it extends ChangeNotifierProvider -> We need to notify the app when the user changes -> login and logout
 
 ```
 import 'package:flutter/material.dart';
@@ -67,15 +69,15 @@ class UserData extends ChangeNotifier {
 }
 ```
 
-We will use provider to maintain state within app. We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
+> We will use **provider** to maintain state within app. We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
 
-update pubspec.yaml 
+Update pubspec.yaml 📄 file
 
 ```
   provider: ^6.0.2
 ```
 
-update main.dart main()
+update **main.dart** 📄 file **main()** function , import necessary packages
 
 ```
 runApp(
@@ -96,7 +98,7 @@ runApp(
   );
 ```
 
-modify home and add routes for navigation
+modify **main.dart** 📄  home: and add routes for navigation -> we create function **_getScreenId** in the next step
 
 ```
 home: _getScreenId(),
