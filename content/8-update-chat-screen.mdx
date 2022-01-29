@@ -69,9 +69,9 @@ Future<List<Message>> getChatMessages(
 
 #### Update Message Model
 
-We need to update our message model and introduce <!-
+We need to update our message model and introduce
 
-final Timestamp? timestamp;
+**final Timestamp? timestamp;**
 
 also it will have a function that maps database values with object.
 
@@ -109,9 +109,9 @@ class Message {
 }
 ```
 
-We will add dateFormat to our constants.dart 📄 file
+We will add **dateFormat** to our **constants.dart** 📄 file
 
-To get the dateformat import package - intl - pubspec.yaml
+To get the **dateformat** import package - intl - pubspec.yaml
 
 > **`intl: ^0.17.0`**
 
@@ -243,7 +243,7 @@ You may receive an indexing error, go to console and **click on the link to rebu
 
 We would also like to send pictures in the chat.
 
-In our storage_service.dart we will add/check function **uploadMessageImage**
+In our **storage_service.dart** we will add/check function **uploadMessageImage**
 
 ```
 Future<String> uploadMessageImage(File imageFile) async {
