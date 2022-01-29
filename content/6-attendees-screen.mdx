@@ -291,7 +291,7 @@ class AllAttendees extends StatelessWidget {
 
 ### Introduction to widget - separation of concern
 
-Create a 📁 folder for ‘widgets’ => add 📄 file all_attendees_widget.dart
+Create a 📁 folder for ‘**widgets**’ => add 📄 file **all_attendees_widget.dart**
 
 ```
 import 'package:devfest_flutter_firebase_chat/helpers/app_constants.dart';
@@ -347,7 +347,7 @@ class AllAttendees extends StatelessWidget {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          profileImage(user, avatarRadius: 20),
+                          //   profileImage(user, avatarRadius: 20),
                           const SizedBox(width: 10.0),
                           Center(
                             child: Column(
@@ -385,9 +385,14 @@ class AllAttendees extends StatelessWidget {
     );
   }
 }
+
 ```
 
 > and update attendees_screen.dart to use this widget
+
+```
+return AllAttendees(appUsers: appUsers);
+```
 
 # User profile images
 
