@@ -396,13 +396,13 @@ return AllAttendees(appUsers: appUsers);
 
 # User profile images
 
-Profile images will come from the network, We will use Flutter library to load and cache network images We are using cached_network_image ,add to pubspec.yaml and get the package..
+Profile images will come from the network, We will use Flutter library to load and cache network images We are using cached_network_image ,add to pubspec.yaml 📄 file and get the package.
 
 > `cached_network_image: ^3.2.0`
 
 Lets first add a common App drawer
 
-under widget folder create a new file app_drawer_widget.dart
+Under **widgets** 📁 folder create a new 📄 file **app_drawer_widget.dart**
 
 ```
 import 'package:flutter/material.dart';
@@ -512,7 +512,7 @@ class _AppDrawerState extends State<AppDrawer> {
 }
 ```
 
-update attendees_screen.dart file to include the new appdrawer 
+update **attendees_screen.dart** 📄 file to include the new appdrawer 
 
 ```
 return Scaffold(
@@ -521,7 +521,7 @@ return Scaffold(
 
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643272478/Codelab/flutter_05_khor4p.png)
 
-Lets add functionality to update and Edit Profile Image
+Lets add functionality to update and Edit the Profile Image
 
 Create a new widget user_profile_image.dart file under widgets folder
 
