@@ -17,9 +17,7 @@ keywords:
 ---
 # 🧑‍🤝‍🧑 Chat Screen
 
-Lets start building the chat screen
-
-for chat we need messages, we will create a model for messages , Create a new 📄 file under models 📁 folder  => **`message.dart`**
+Lets start building the chat screen, for chat we need messages, we will create a model for messages , Create a new 📄 file under models 📁 folder  => **`message.dart`**
 
 ```
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,10 +51,9 @@ class Message {
         timestamp: doc['timestamp']);
   }
 }
-
 ```
 
-We will create some dummy data to work with , update 📄 file data.dart under data 📁 folder , we will create some dummy users and messages
+We will create some dummy data to work with , update 📄 file **data.dart** under data 📁 folder ,  will create some dummy users and messages
 
 ```
 import 'package:devfest_flutter_firebase_chat/models/app_user.dart';
@@ -204,7 +201,6 @@ List<Message> messages = [
     unread: true,
   ),
 ];
-
 ```
 
 Now we start with our chat screen
@@ -407,10 +403,9 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-
 ```
 
-To test update main.dart and point home to the new chat_screen.dart
+To test update main.dart 📄 file and point home to the new **chat_screen**
 
 ```
 home: const ChatScreen(),
