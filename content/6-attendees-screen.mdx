@@ -108,7 +108,7 @@ home: _getScreenId(),
       },
 ```
 
-We got all our references now we need to navigate from main to attendees screen if we are logged in. update function _getScreenId() in  main.dart
+We got all our references now we need to navigate from main to attendees screen if we are logged in. update function _getScreenId() in  main.dart 📄 file 
 
 ```
 Widget _getScreenId() {
@@ -126,7 +126,7 @@ Widget _getScreenId() {
   }
 ```
 
-a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart ,** We can see the attendees screen with a list of attendees.
+Create a new 📄 file under `screens` 📁 folder  => **attendees_screen.dart ,** We can see the attendees screen with a list of attendees.
 
 ```
 import 'package:devfest_flutter_firebase_chat/helpers/app_constants.dart';
@@ -247,7 +247,7 @@ class AllAttendees extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           const SizedBox(width: 10.0),
-                          profileImage(user, avatarRadius: 20),
+                          //profileImage(user, avatarRadius: 20),
                           Center(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -284,6 +284,7 @@ class AllAttendees extends StatelessWidget {
     );
   }
 }
+
 ```
 
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643232802/Codelab/flutter_06_attendees_screen_h9smua.png)
