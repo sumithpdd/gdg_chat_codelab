@@ -79,8 +79,6 @@ Make sure copy items if needed is Checked 
 
 ### update App-level build.gradle
 
-
-
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643207025/Codelab/flutter_02_chat_Firebase_console_add_google_services_08_ctsijy.png)
 
 update dependency - not an important step
@@ -97,4 +95,19 @@ Add reference to these package 🗃️
   firebase_core: ^1.11.0
   firebase_messaging: ^11.2.5
   firebase_storage: ^10.2.5
+```
+
+<span style="color:#FF003B">! If you get an error.</span>
+
+> \[!] Automatically assigning platform \`iOS\` with version \`9.0\` on target \`Runner\` because no platform was specified. Please specify a platform for this target in your Podfile. See `[https://guides.cocoapods.org/syntax/podfile.html#platform`](<> "Cmd + click to follow link").
+>
+> Error running pod install
+
+run
+
+```
+cd ios
+pod deintegrate
+pod repo update
+pod install
 ```
