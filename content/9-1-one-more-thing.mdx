@@ -17,50 +17,47 @@ keywords:
 
 On the chat window lets add who is sending message we will modify the app bar to include profile image and name
 
+modify chat_screen.dart to accept touser as a AppUser
+
 ```
-appBar: AppBar(
+class ChatScreen extends StatefulWidget {
+  final String? currentUserId;
+  final AppUser toUser;
 
-       title: Row(
+  const ChatScreen({this.currentUserId, required this.toUser, Key? key})
+      : super(key: key);
+```
 
-         children: <Widget>[
+Fix all the references
 
-           CircleAvatar(
+Create a private function for appbar
 
-               radius: 25.0,
+```
+AppBar _appbar() {
+    return AppBar(
+      title: Row(
+        children: <Widget>[
+          profileImage(widget.toUser, avatarRadius: 25),
+          SizedBox(width: 10.0),
+          Text(
+            widget.toUser.name!,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      elevation: 10.0,
+    );
+  }
+```
 
-               backgroundImage: widget.toUser.profileImageUrl.isEmpty
+Update the build method to use the appbar
 
-                   ? // Display placeholder
-
-                   AssetImage('assets/images/user_placeholder.jpg')
-
-                   : CachedNetworkImageProvider(
-
-                       widget.toUser.profileImageUrl)),
-
-           SizedBox(width: 10.0),
-
-           Text(
-
-             widget.toUser.name,
-
-             style: TextStyle(
-
-               fontSize: 18.0,
-
-               fontWeight: FontWeight.bold,
-
-             ),
-
-           ),
-
-         ],
-
-       ),
-
-       elevation: 10.0,       
-
-     ),
+```
+return Scaffold(
+      appBar: _appbar(),
 ```
 
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643317783/Codelab/flutter_06_awxxgd.png)

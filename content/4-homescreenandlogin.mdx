@@ -18,6 +18,8 @@ keywords:
 
 ## 🔒 Authentication and Login
 
+https://github.com/sumithpdd/flutterworkshop/tree/03_setup_firebase
+
 Lets first add login screen for that we need to call `auth service`, 
 
 We create or use  📁 Folder = > **services** -> File -> auth_service.dart 
@@ -27,7 +29,6 @@ We create or use  📁 Folder = > **services** -> File -> auth_service.dart
 `we are adding FirebaseMessaging for token reference, not an important step`
 
 ```dart
-import 'package:devfest_flutter_firebase_chat/helpers/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
@@ -83,7 +84,11 @@ final FirebaseStorage _storage = FirebaseStorage.instance;
 final storageRef = _storage.ref();
 ```
 
-go back and update `auth_service.dart` 📄 file
+go back and update `auth_service.dart` 📄 file and import 
+
+```
+import 'package:/helpers/constants.dart';
+```
 
 ```dart
  if (authResult.user != null) {
@@ -141,7 +146,7 @@ factory User.fromDoc(DocumentSnapshot doc)
 
 ## Check firebase Console
 
-Make sure database and authentication is set
+Make sure **database** and **authentication** is set
 
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643211130/Codelab/flutter_03_03_firebase_database_fgj16j.png)
 
@@ -404,9 +409,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
 ```
 
-### Update Main.dart 📄 file
+### Update Main.dart
 
-Initialise Firebase on start
+Initialize Firebase on start
 
 ```
 void main() async {
@@ -431,4 +436,4 @@ home: const LoginScreen(),
 
 ![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643213183/Codelab/flutter_03_04_firebase_database_usersaved_whaqmn.png)
 
-![](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643212854/Codelab/flutter_02_oxubhh.png)
+![chat app signup screen](https://res.cloudinary.com/sitecore/image/upload/c_limit,q_80,w_2000/v1643212854/Codelab/flutter_02_oxubhh.png)

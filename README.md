@@ -142,5 +142,4 @@ Canonical URLs are generated automatically.
 
 ## ☁️ Deploy
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/hasura/gatsby-gitbook-starter)
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b74b211f-b2b3-415f-843c-f1b8578a17ec/deploy-status)](https://app.netlify.com/sites/foocafe-flutter-chat-codelab/deploys)

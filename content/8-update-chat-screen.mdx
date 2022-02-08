@@ -121,7 +121,7 @@ final DateFormat timeFormat = DateFormat('E, h:mm a');
 
 #### Refactor Chat Screen
 
-That chat_screen.dart will need to take 2 parameters, from which **user message** is coming from and to sender.
+That **`chat_screen.dart`** will need to take 2 parameters, from which user message is coming from and to sender.
 
 ```
  final String currentUserId;
@@ -166,27 +166,29 @@ List<Message> _messages = [];
 Update message time in the text with
 
 ```
-  Text(
-  '${timeFormat.format(message.timestamp.toDate())}',
+Text(
+    timeFormat.format(message.timestamp!.toDate()),
 ```
 
 In the  `void _handleSubmitted(String` , update code to pass new values and call the database service
 
 ```
-void _handleSubmitted(String text) {
+  void _handleSubmitted(String text) {
     _textMessageController.clear();
 
     setState(() {
       _isComposing = false;
     });
+
     Message message = Message(
       senderId: widget.currentUserId,
-      toUserId: widget.toUser.id,
+      toUserId: widget.toUserId,
       timestamp: Timestamp.fromDate(DateTime.now()),
       text: text,
       isLiked: true,
       unread: true,
     );
+
     setState(() {
       _messages.insert(0, message);
     });
@@ -321,7 +323,7 @@ RawMaterialButton(
               Icons.camera_alt,
 ```
 
-Update _handleSubmitted to take additional parameter
+Update **_handleSubmitted** to take additional parameter
 
 ```
 void _handleSubmitted(String? text, String? imageUrl) {

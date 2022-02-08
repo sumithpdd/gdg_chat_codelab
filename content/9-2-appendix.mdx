@@ -17,8 +17,6 @@ keywords:
 
 > For your info
 >
->
->
 > `Exception has occurred.`
 >
 > `PlatformException (PlatformException(Error performing getDocuments, FAILED_PRECONDITION: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/gdgflutterfirebasechat/firestore/indexes?create_composite=ClRwcm9qZWN0cy9nZGdmbHV0dGVyZmlyZWJhc2VjaGF0L2RhdGFiYXNlcy8oZGVmYXVsdCkvY29sbGVjdGlvbkdyb3Vwcy9jaGF0cy9pbmRleGVzL18QARoMCghzZW5kZXJJZBABGgwKCHRvVXNlcklkEAEaDQoJdGltZXN0YW1wEAIaDAoIX19uYW1lX18QAg, null))`
@@ -27,7 +25,7 @@ keywords:
 
 https://stackoverflow.com/questions/52060516/how-to-change-android-minsdkversion-in-flutter-project
 
-update` local.properties`
+update`local.properties`
 
 ```
 flutter.minSdkVersion=21
@@ -50,7 +48,21 @@ defaultConfig {
 }
 ```
 
- 
+### Error with firebase and IOS
+
+> \[!] Automatically assigning platform \`iOS\` with version \`9.0\` on target \`Runner\` because no platform was specified. Please specify a platform for this target in your Podfile. See `[https://guides.cocoapods.org/syntax/podfile.html#platform](<> "Cmd + click to follow link")
+
+open *\[YourProject]/ios/Podfile* and remove the **\#** sign from `platform :ios, '9.0'` and try `flutter run`. If it doesn't work increase the version number for example to 11.0
+
+delete podfile.lock and run these commands
+
+```
+flutter clean
+cd ios
+pod deintegrate
+pod repo update
+pod install
+```
 
 ### Explain 
 

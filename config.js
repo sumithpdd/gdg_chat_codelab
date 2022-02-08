@@ -38,10 +38,10 @@ const config = {
     frontline: false,
     ignoreIndex: true,
     title:
-      "<a href='https://developers.google.com/community/gdg'>FLUTTER CODE LAB</a><div class='greenCircle'></div>",
+      "<a href='https://developers.google.com/community/gdg'>Flutter Chat app codelab</a><div class='greenCircle'></div>",
   },
   siteMetadata: {
-    title: 'GDG Chat app codelab | Sumith Damodaran',
+    title: 'GDG Chat App Codelab | Sumith Damodaran',
     description: 'Documentation built with mdx.',
     ogImage: null,
     docsLocation: 'https://github.com/sumithpdd/gdg_chat_codelab',
@@ -50,7 +50,7 @@ const config = {
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.
     manifest: {
-      name: 'GDG Chat app codelab',
+      name: 'GDG Chat App Codelab',
       short_name: 'GDGChatAppCodelab',
       start_url: '/',
       background_color: '#6b37bf',

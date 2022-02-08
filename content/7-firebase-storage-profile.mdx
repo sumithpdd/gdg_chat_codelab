@@ -17,9 +17,10 @@ keywords:
 
 Here we will look at firebase storage, we have images for the attendees 📇 profile Images we can store in firebase storage. For that we will create a Edit profile screen
 
-### Image Upload
+## Image Upload
 
-Create a new file storage_service.dart under services folder , install a package flutter_image_compress , update pubspec.yaml so that we compress images during storage.
+Create a new 📄 file **`storage_service.dart`** under **`services`** 📁 folder 
+Install a package flutter_image_compress , update pubspec.yaml 📄 file so that we compress images during storage.
 
  flutter_image_compress: ^1.1.0
 
@@ -96,7 +97,7 @@ class StorageService {
 }
 ```
 
-Also update database service to add a function to update user database_service.dart 📄 file
+Also update database service to add a function to update user **`database_service.dart`**
 
 ```
  static void updateUser(AppUser user) {
@@ -108,14 +109,14 @@ Also update database service to add a function to update user database_service.d
   }
 ```
 
-Now backend is ready, lets work on the screen create a new file edit_profile_screen.dart under screens folder,
+Now backend is ready, lets work on the screen create a new file **`edit_profile_screen.dart`** under screens folder,
 
 ### EditProfile Screen
 
-Create a new 📄 file edit_profile_screen.dart under screens 📁 folder.
-we need a image picker, install a new package **`image_picker: ^0.8.4+5`**
+Create a new 📄 file `edit_profile_screen.dart` under **`screens`** 📁 folder.
+we need a image picker, install a new package **image_picker: ^0.8.4+5**
 
-add this code to edit_profile_screen.dart 📄 file
+add this code to **`edit_profile_screen.dart`** file
 
 ```
 import 'dart:io';
@@ -309,7 +310,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 }
 ```
 
-to navigate to this screen modify **onpressed** for the Edit Profile icon button in app_drawer_widget.dart , fix the imports
+to navigate to this screen modify **onpressed** for the Edit Profile icon button in **app_drawer_widget.dart** , fix the imports
 
 ```
    onPressed: () => Navigator.push(
@@ -327,7 +328,7 @@ to navigate to this screen modify **onpressed** for the Edit Profile icon button
 
 ### Information and FYI
 
-We used few new packages in the new code lets add them to pubspec.yaml and run pub get
+We used few new packages in the new code make sure they exist , or add them to pubspec.yaml and run pub get
 
 > `flutter_image_compress: ^0.6.5+1`
 > `path_provider: ^1.6.5`

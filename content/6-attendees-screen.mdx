@@ -15,7 +15,7 @@ keywords:
 ---
 # 🧑‍🤝‍🧑 Attendees Screen
 
-Now we have the chat screen working , user can also login , lets have some attendees and after the user logs-in they will view all attendees in the event  `attendees_screen`, => and attendees can chat among themselves.
+Now we have the chat screen working , user can also login , lets have some attendees and after the user logs in we we will redirect to `attendees_screen`,  and attendees can chat among themselves.
 
 First create database_service to call **firestore database** and retrieve users.
 
@@ -71,7 +71,7 @@ class UserData extends ChangeNotifier {
 
 > We will use **provider** to maintain state within app. We use to pass data between screens, for that we will use provider package A mixture between dependency injection (DI) and state management, built with widgets for widgets.
 
-Update pubspec.yaml 📄 file
+update **`pubspec.yaml`** 📄 file
 
 ```
   provider: ^6.0.2
@@ -98,7 +98,7 @@ runApp(
   );
 ```
 
-modify **main.dart** 📄  home: and add routes for navigation -> we create function **_getScreenId** in the next step
+modify **home** and add **routes** for navigation
 
 ```
 home: _getScreenId(),
@@ -108,7 +108,9 @@ home: _getScreenId(),
       },
 ```
 
-We got all our references now we need to navigate from main to attendees screen if we are logged in. update function _getScreenId() in  main.dart 📄 file 
+This will give an error, we will create the files in the next steps.
+
+We got all our references now we need to navigate from main to attendees screen if we are logged in. update function **_getScreenId()** in  **main.dart**
 
 ```
 Widget _getScreenId() {
@@ -388,19 +390,23 @@ class AllAttendees extends StatelessWidget {
 
 ```
 
-> and update attendees_screen.dart to use this widget
-
-```
-return AllAttendees(appUsers: appUsers);
-```
+> and update **attendees_screen.dart** to use this widget
+>
+> ```
+> body: Column(
+>         children: <Widget>[
+>           AllAttendees(appUsers: _users),
+>         ],
+>       ),
+> ```
 
 # User profile images
 
-Profile images will come from the network, We will use Flutter library to load and cache network images We are using cached_network_image ,add to pubspec.yaml 📄 file and get the package.
+Profile images will come from the network, We will use Flutter library to load and cache network images We are using cached_network_image ,add to pubspec.yaml and get the package..
 
 > `cached_network_image: ^3.2.0`
 
-Lets first add a common App drawer
+Lets first add a common **App drawer**
 
 Under **widgets** 📁 folder create a new 📄 file **app_drawer_widget.dart**
 
@@ -523,7 +529,7 @@ return Scaffold(
 
 Lets add functionality to update and Edit the Profile Image
 
-Create a new widget user_profile_image.dart file under widgets folder
+Create a new widget **`user_profile_image.dart`** file under **widgets** folder
 
 ```
 import 'package:devfest_flutter_firebase_chat/helpers/app_constants.dart';
@@ -551,7 +557,7 @@ Widget profileImage(AppUser user, {double avatarRadius = 25}) {
 }
 ```
 
-place the image before the name in the drawer app_drawer_widget.dart 
+Place the image before the name in the drawer **`app_drawer_widget.dart` ,** and **import** the file
 
 ```
  children: <Widget>[
@@ -560,4 +566,6 @@ place the image before the name in the drawer app_drawer_widget.dart
                   user.name!,
 ```
 
-Finally add a new screen to edit user profile and upload/edit profile image for that first we need a service to upload image to **firebase storage** see next section =>
+Finally we will add a new screen to edit user profile and upload/edit profile image
+
+For that first we need a service to upload image to **firebase storage** see next section =>

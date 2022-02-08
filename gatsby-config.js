@@ -50,17 +50,17 @@ const plugins = [
   },
 ];
 // check and add algolia
-if (config.header.search && config.header.search.enabled && config.header.search.algoliaAppId && config.header.search.algoliaAdminKey) {
-  plugins.push({
-    resolve: `gatsby-plugin-algolia`,
-    options: {
-      appId: config.header.search.algoliaAppId, // algolia application id
-      apiKey: config.header.search.algoliaAdminKey, // algolia admin key to index
-      queries,
-      chunkSize: 10000, // default: 1000
-    }}
-  )
-}
+// if (config.header.search && config.header.search.enabled && config.header.search.algoliaAppId && config.header.search.algoliaAdminKey) {
+//   plugins.push({
+//     resolve: `gatsby-plugin-algolia`,
+//     options: {
+//       appId: config.header.search.algoliaAppId, // algolia application id
+//       apiKey: config.header.search.algoliaAdminKey, // algolia admin key to index
+//       queries,
+//       chunkSize: 10000, // default: 1000
+//     }}
+//   )
+// }
 // check and add pwa functionality
 if (config.pwa && config.pwa.enabled && config.pwa.manifest) {
   plugins.push({
@@ -78,9 +78,9 @@ if (config.pwa && config.pwa.enabled && config.pwa.manifest) {
 }
 
 // check and remove trailing slash
-if (config.gatsby && !config.gatsby.trailingSlash) {
-  plugins.push('gatsby-plugin-remove-trailing-slashes');
-}
+// if (config.gatsby && !config.gatsby.trailingSlash) {
+//   plugins.push('gatsby-plugin-remove-trailing-slashes');
+// }
 
 module.exports = {
   pathPrefix: config.gatsby.pathPrefix,
