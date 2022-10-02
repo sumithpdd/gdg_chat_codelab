@@ -31,7 +31,7 @@
   media_library: {
       name: 'cloudinary',
       config: {
-        cloud_name: 'sitecore',
+        cloud_name: 'flutterdevcamp',
         api_key: '664686945695341',
         default_transformations: [
           [
